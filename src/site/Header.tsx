@@ -19,7 +19,7 @@ type HeaderProps = {
     updateSessionToken: (newToken: string) => void,
     clearLocalStorage: () => void,
     updateUserInfo: (role: string, admin:boolean) => void,
-    updateProductView: () => void,
+    notProductView: () => void,
     updateMyAccountView: () => void,
     updateAdminAccount: () => void,
     updateMyLocationView: () => void,
@@ -35,48 +35,41 @@ class Header extends React.Component<HeaderProps, {}>{
         super(props)
     }
 
-    adminButton(){
-        return this.props.adminStatus ? <><button onClick={this.props.updateAdminAccount}>Admin User Management</button></> : <></>
-    }
+    // adminButton(){
+    //     return this.props.adminStatus ? <><button onClick={this.props.updateAdminAccount}>Admin User Management</button></> : <></>
+    // }
 
-    manageMyAccount(){
-        return !this.props.myAccountView ? <><button onClick={this.props.updateMyAccountView}>Manage My Account</button></> : <></>
-    }
+    // manageMyAccount(){
+    //     return !this.props.myAccountView ? <><button onClick={this.props.updateMyAccountView}>Manage My Account</button></> : <></>
+    // }
 
-    productFeed(){
-        return !this.props.productFeedView ? <><button onClick={this.props.updateProductView}>View Product Feed</button></> : <></>
-    }
+    // productFeed(){
+    //     return !this.props.productFeedView ? <><button onClick={this.props.notProductView}>View Product Feed</button></> : <></>
+    // }
 
-    makerButtons(){
-        return this.props.userRole == 'maker' ? <><button onClick={this.props.updateMyItemView}>View My Inventory</button><button onClick={this.props.updateMyLocationView}>View My Listing Locations</button></> : <></>
-    }
+    // makerButtons(){
+    //     return this.props.userRole == 'maker' ? <><button onClick={this.props.updateMyItemView}>View My Inventory</button><button onClick={this.props.updateMyLocationView}>View My Listing Locations</button></> : <></>
+    // }
 
-    linkList(){
-        <Router>
-                <Link to='managemyaccount'></Link>
-                <Link to=''></Link>
-        </Router>
-    }
+    // adminLink(){
 
-    adminLink(){
+    // }
 
-    }
+    // makerLink(){
 
-    makerLink(){
-
-    }
+    // }
 
     render(){
     return(
         <div>
-            {this.adminButton()}
+            {/* {this.adminButton()} */}
             {/* {this.manageMyAccount()} */}
-            {this.makerButtons()}
-            {this.productFeed()}
+            {/* {this.makerButtons()}    */}
+            {/* {this.productFeed()} */}
             <button onClick={this.props.clearLocalStorage}>Log Out</button>
-            <Router>
-                {/* <Link to='managemyaccount'>Manage My Account</Link>
-                <Link to='productfeed'>Product Feed</Link> */}
+            {/* <Router>
+                <Link to='managemyaccount'>Manage My Account</Link>
+                <Link to='productfeed'>Product Feed</Link>
                 <Link to='myitems'></Link>
                 <Link to='editmyaccount'></Link>
                 <Link to='deletemyaccount'></Link>
@@ -91,7 +84,7 @@ class Header extends React.Component<HeaderProps, {}>{
                 <Link to='admineditaccount'></Link>
                 <Link to='admindeleteaccount'></Link>
                 <Link to='adminupdatetoadmin'></Link>
-            </Router>
+            </Router> */}
         </div>
     )}
 };

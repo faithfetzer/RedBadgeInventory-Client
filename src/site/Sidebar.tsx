@@ -19,11 +19,16 @@ type SidebarProps = {
     updateSessionToken: (newToken: string) => void,
     clearLocalStorage: () => void,
     updateUserInfo: (role: string, admin:boolean) => void,
-    updateProductView: () => void,
+    notProductView: () => void,
     updateMyAccountView: () => void,
     updateAdminAccount: () => void,
     updateMyLocationView: () => void,
-    updateMyItemView: () => void
+    updateMyItemView: () => void,
+    productView: () => void,
+    notMyAccountView: () => void,
+    notAdminAccount: () => void,
+    notMyItemView: () => void,
+    notMyLocationView: () => void
     }
 
 type SidebarState = {
@@ -35,27 +40,46 @@ class Sidebar extends React.Component<SidebarProps, {}>{
         super(props)
     }
 
+    linkList(){
+        <Router>
+                <Link to='/managemyaccount'></Link>
+                <Link to='/'></Link>
+        </Router>
+    }
+
+    manageMyAccount(){
+        return !this.props.myAccountView ? <><li><Link to='/managemyaccount' onClick={this.props.updateMyAccountView}>My Account</Link></li></> : <></>
+    }
+    makerLink(){
+
+    }
     render(){
         return(
-            <div>
-                {/* {this.manageMyAccount()} */}
+            <div className='sidebar'>
                 <Router>
-                    <Link to='managemyaccount'>Manage My Account</Link>
-                    <Link to='productfeed'>Product Feed</Link>
-                    <Link to='myitems'></Link>
-                    <Link to='editmyaccount'></Link>
-                    <Link to='deletemyaccount'></Link>
-                    <Link to='mylocations'></Link>
-                    <Link to='editmyitems'></Link>
-                    <Link to='addmylocations'></Link>
-                    <Link to='addmyitems'></Link>
-                    <Link to='deletemyitems'></Link>
-                    <Link to='editmylocation'></Link>
-                    <Link to='deletemylocation'></Link>
-                    <Link to='adminmanageaccount'></Link>
-                    <Link to='admineditaccount'></Link>
-                    <Link to='admindeleteaccount'></Link>
-                    <Link to='adminupdatetoadmin'></Link>
+                <div className='sidebar-list-styling'>
+                    <ul className='sidebar-list list-unstyled'>
+                        {this.manageMyAccount()}
+                        <li><Link to='/productfeed'>Product Feed</Link></li>
+                        <li><Link to='/editmyaccount'></Link></li>
+                        <li><Link to='/deletemyaccount'></Link></li>
+
+                        <li><Link to='/addmyitems'></Link></li>
+                        <li><Link to='/myitems'></Link></li>
+                        <li><Link to='/editmyitems'></Link></li>
+                        <li><Link to='/deletemyitems'></Link></li>
+
+                        <li><Link to='/mylocations'></Link></li>
+                        <li><Link to='/addmylocations'></Link></li>
+                        <li><Link to='/editmylocation'></Link></li>
+                        <li><Link to='/deletemylocation'></Link></li>
+
+                        <li><Link to='/adminmanageaccount' onClick={this.props.updateAdminAccount}>Account Manager</Link></li>
+                        <li><Link to='/admineditaccount'></Link></li>
+                        <li><Link to='/admindeleteaccount'></Link></li>
+                        <li><Link to='/adminupdatetoadmin'></Link></li>
+                    </ul>
+                </div>
                 </Router>
             </div>
         )}
