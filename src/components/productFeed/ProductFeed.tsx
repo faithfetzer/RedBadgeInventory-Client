@@ -11,7 +11,6 @@ import {ItemInfo} from '../../Interfaces'
 
 type ProductProps = {
     sessionToken: string,
-    productFeedView: boolean,
 }
 
 type ProductState = {
@@ -73,7 +72,7 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                 )
             })
         } else {
-            return <>No Items Available</>
+            return <><tr>No Items Available</tr></>
         }
     }
 
@@ -81,23 +80,25 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
         return(
             <div>
                 <table>
-                <tr>
-                        <th>Item Name</th>
-                        <th>Item Description</th>
-                        <th>Volume</th>
-                        <th>Volume Units</th>
-                        <th>Weight</th>
-                        <th>Weight Unit</th>
-                        <th>Height</th>
-                        <th>Width</th>
-                        <th>Depth</th>
-                        <th>Units</th>
-                        <th>Category</th>
-                        <th>Price(each)</th>
-                        <th>Quantity Available</th>
-                        <th>Maker Contact</th>
-                    </tr>
-                {this.mapProducts()}
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Item Description</th>
+                            <th>Volume</th>
+                            <th>Volume Units</th>
+                            <th>Weight</th>
+                            <th>Weight Unit</th>
+                            <th>Height</th>
+                            <th>Width</th>
+                            <th>Depth</th>
+                            <th>Units</th>
+                            <th>Category</th>
+                            <th>Price(each)</th>
+                            <th>Quantity Available</th>
+                            <th>Maker Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>{this.mapProducts()}</tbody>
                 </table>
             </div>
     )}
