@@ -7,7 +7,7 @@ import {
 import React from 'react'
 
 type DeleteUserProps = {
-    // sessionToken: string,
+    sessionToken: string,
     // adminStatus: boolean,
     // productFeedView: boolean,
     // myAccountView: boolean,

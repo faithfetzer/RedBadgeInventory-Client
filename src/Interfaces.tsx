@@ -1,5 +1,5 @@
 export interface UserInfo {
-    id: number,
+    id: number | undefined,
     firstName: string,
     lastName: string,
     email: string,
@@ -9,28 +9,30 @@ export interface UserInfo {
 }
 
 export interface ItemInfo {
-    maker_id : number,
+    id: number | undefined,
+    maker_id : number | undefined,
     name : string,
     description : string,
-    volume: number,
+    volume: number | undefined,
     volumeUnit: string,
-    weight: number,
+    weight: number | undefined,
     weightUnit: string,
-    height: number,
-    width: number,
-    depth: number,
+    height: number | undefined,
+    width: number | undefined,
+    depth: number | undefined,
     lengthUnit : string,
     category: string,
     available : boolean,
-    price :  number,
+    price :  number | undefined,
     totalQuantity : number,
-    location_id : number,
-    quantityListed : number,
+    location_id : number | undefined,
+    quantityListed : number | undefined,
     quantitySold: number
 }
 
 export interface LocationInfo {
-    maker_id: number,
+    id: number | undefined,
+    maker_id: number | undefined,
     name: string,
     url: string,
     address: string,

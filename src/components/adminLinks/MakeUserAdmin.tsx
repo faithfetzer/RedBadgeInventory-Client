@@ -7,7 +7,7 @@ import {
 import React from 'react'
 
 type MakeUserAdminProps = {
-    // sessionToken: string,
+    sessionToken: string,
     // adminStatus: boolean,
     // productFeedView: boolean,
     // myAccountView: boolean,
@@ -30,8 +30,8 @@ type MakeUserAdminProps = {
     // notMyLocationView: () => void
 }
 
-class MakeUserAdmin extends React.Component<MakeUserAdmin, {}>{
-    constructor(props: MakeUserAdmin){
+class MakeUserAdmin extends React.Component<MakeUserAdminProps, {}>{
+    constructor(props: MakeUserAdminProps){
         super(props)
     }
 

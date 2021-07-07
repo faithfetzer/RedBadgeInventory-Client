@@ -9,12 +9,8 @@ import Sidebar from './site/Sidebar'
 type AppState = {
   sessionToken: string,
   userRole: string,
-  adminStatus: boolean,
-  productFeedView: boolean,
-  myAccountView: boolean,
-  adminAccountManager: boolean,
-  myItemView: boolean,
-  myLocationView: boolean
+  adminStatus: boolean | null,
+  currentUserId: number | undefined
 }
 
 class App extends React.Component<{}, AppState>{
@@ -23,12 +19,8 @@ class App extends React.Component<{}, AppState>{
     this.state = {
       sessionToken: '',
       userRole: '',
-      adminStatus: false,
-      productFeedView: true,
-      myAccountView: false,
-      adminAccountManager: false,
-      myItemView: false,
-      myLocationView: false
+      adminStatus: null,
+      currentUserId: undefined
     }
     this.updateSessionToken = this.updateSessionToken.bind(this)
     this.checkSessionToken = this.checkSessionToken.bind(this)
@@ -50,8 +42,11 @@ class App extends React.Component<{}, AppState>{
     }
   }
 
-  updateLocalStorage(newToken: string){
-    localStorage.setItem("token", newToken);
+  updateLocalStorage(newToken: string, role: string, adminStatus: boolean){
+    console.log("admin", adminStatus)
+    localStorage.setItem("token2", newToken)
+    localStorage.setItem("role", role);
+    // localStorage.setItem("admin", adminStatus);
   };
 
   clearLocalStorage = () => {
@@ -62,84 +57,26 @@ class App extends React.Component<{}, AppState>{
     this.checkSessionToken()
   };
 
-  updateUserInfo= (role: string, admin:boolean) => {
+  updateUserInfo= (role: string, admin:boolean, userID: number) => {
     console.log('update user info')
     this.setState({
       userRole: role,
-      adminStatus: admin
-    })
+      adminStatus: admin,
+      currentUserId: userID
+    }, () =>console.log(this.state))
   }
 
   componentDidMount(){
     this.checkSessionToken()
   }
 
-  notProductView(){
-    this.setState({
-      productFeedView: false
-    })
-  }
-
-  updateMyAccountView =() =>{
-    this.setState({
-      myAccountView: false
-    })
-  }
-
-  updateAdminAccount =() =>{
-    this.setState({
-      adminAccountManager: false
-    })
-  }
-
-  updateMyItemView= ()=>{
-    this.setState({
-      myItemView: false
-    })
-  }
-
-  updateMyLocationView =() =>{
-    this.setState({
-      myLocationView: false
-    })
-  }
-
-  productView(){
-    this.setState({
-      productFeedView: true
-    })
-  }
-
-  notMyAccountView =() =>{
-    this.setState({
-      myAccountView: false
-    })
-  }
-
-  notAdminAccount =() =>{
-    this.setState({
-      adminAccountManager: false
-    })
-  }
-
-  notMyItemView= ()=>{
-    this.setState({
-      myItemView: false
-    })
-  }
-
-  notMyLocationView =() =>{
-    this.setState({
-      myLocationView: false
-    })
-  }
 
   protectedView(){
     return this.state.sessionToken ? 
-      <><Header sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} productFeedView={this.state.productFeedView} myAccountView={this.state.myAccountView} adminAccountManager={this.state.adminAccountManager} notProductView={this.notProductView} updateMyAccountView={this.updateMyAccountView} updateAdminAccount={this.updateAdminAccount} myItemView={this.state.myItemView} myLocationView={this.state.myLocationView} updateMyLocationView={this.updateMyLocationView} updateMyItemView={this.updateMyItemView}/>
-      <Sidebar sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} productFeedView={this.state.productFeedView} myItemView={this.state.myItemView} myLocationView={this.state.myLocationView} myAccountView={this.state.myAccountView} adminAccountManager={this.state.adminAccountManager} updateMyLocationView={this.updateMyLocationView} updateMyItemView={this.updateMyItemView} updateMyAccountView={this.updateMyAccountView} notProductView={this.notProductView} updateAdminAccount={this.updateAdminAccount} productView={this.productView} notMyAccountView={this.notMyAccountView} notAdminAccount={this.notAdminAccount} notMyItemView={this.notMyItemView} notMyLocationView={this.notMyLocationView}/>
+      <><Header sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId}/>
+      <Sidebar sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId}/>
       {/* <Display sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} productFeedView={this.state.productFeedView} myItemView={this.state.myItemView} notProductView={this.notProductView} myLocationView={this.state.myLocationView} myAccountView={this.state.myAccountView} adminAccountManager={this.state.adminAccountManager} updateMyLocationView={this.updateMyLocationView} updateMyItemView={this.updateMyItemView} updateMyAccountView={this.updateMyAccountView} updateAdminAccount={this.updateAdminAccount} productView={this.productView} notMyAccountView={this.notMyAccountView} notAdminAccount={this.notAdminAccount} notMyItemView={this.notMyItemView} notMyLocationView={this.notMyLocationView}/>*/}</>
-      : <><Auth sessionToken={this.state.sessionToken} userRole={this.state.userRole} updateUserInfo={this.updateUserInfo} updateSessionToken={this.updateSessionToken} updateLocalStorage={this.updateLocalStorage} clearLocalStorage={this.clearLocalStorage}/></>
+      : <><Auth sessionToken={this.state.sessionToken} userRole={this.state.userRole} currentUserId={this.state.currentUserId} adminStatus={this.state.adminStatus} updateSessionToken={this.updateSessionToken} updateLocalStorage={this.updateLocalStorage} clearLocalStorage={this.clearLocalStorage} updateUserInfo={this.updateUserInfo}/></>
   }
 
   render(){

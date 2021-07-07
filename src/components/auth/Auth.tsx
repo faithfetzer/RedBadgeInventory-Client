@@ -6,9 +6,11 @@ import APIURL from '../../helpers/environment'
 type AuthProps = {
     sessionToken: string,
     userRole: string,
+    currentUserId: number | undefined,
+    adminStatus: boolean | null,
     updateSessionToken: (newToken: string) => void,
-    updateLocalStorage: (newToken: string) => void,
-    updateUserInfo: (role: string, admin:boolean) => void,
+    updateLocalStorage: (newToken: string, role: string, adminStatus: boolean) => void,
+    updateUserInfo: (role: string, admin:boolean, userID: number) => void,
     clearLocalStorage: () => void
 }
 
@@ -101,12 +103,13 @@ class Auth extends React.Component<AuthProps, AuthState>{
         })
             .then(response => response.json())
             .then((response) => {
-                // console.log('response', response);
+                console.log('response', response);
                 this.props.updateSessionToken(response.token);
-                this.props.updateLocalStorage(response.token);
-                this.props.updateUserInfo(response.user.role, response.user.admin);
+                this.props.updateLocalStorage(response.token, response.user.role, response.user.admin);
+                this.props.updateUserInfo(response.user.role, response.user.admin, response.user.id);
                 // console.log(this.props.sessionToken);
             })
+            .catch(err => console.log(err))
     }
 
     componentWillMount(){

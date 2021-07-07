@@ -5,9 +5,12 @@ import {
     Route
     } from 'react-router-dom';
 import React from 'react'
+import {ItemInfo} from '../../../Interfaces'
 
 type DeleteItemProps = {
     sessionToken: string,
+    // id: number | undefined,
+    // item: ItemInfo
     // adminStatus: boolean,
     // productFeedView: boolean,
     // myAccountView: boolean,

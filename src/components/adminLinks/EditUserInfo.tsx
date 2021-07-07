@@ -7,7 +7,7 @@ import {
 import React from 'react'
 
 type EditUserInfoProps = {
-    // sessionToken: string,
+    sessionToken: string,
     // adminStatus: boolean,
     // productFeedView: boolean,
     // myAccountView: boolean,

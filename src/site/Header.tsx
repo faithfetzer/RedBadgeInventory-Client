@@ -9,21 +9,12 @@ import React from 'react'
 
 type HeaderProps = {
     sessionToken: string,
-    productFeedView: boolean,
-    myAccountView: boolean,
-    adminAccountManager: boolean,
     userRole: string,
-    adminStatus: boolean,
-    myItemView: boolean,
-    myLocationView: boolean,
+    adminStatus: boolean | null,
+    currentUserId: number | undefined,
     updateSessionToken: (newToken: string) => void,
     clearLocalStorage: () => void,
-    updateUserInfo: (role: string, admin:boolean) => void,
-    notProductView: () => void,
-    updateMyAccountView: () => void,
-    updateAdminAccount: () => void,
-    updateMyLocationView: () => void,
-    updateMyItemView: () => void
+    updateUserInfo: (role: string, admin:boolean, userID: number) => void,
     }
 
 type HeaderState = {

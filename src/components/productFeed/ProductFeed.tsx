@@ -1,12 +1,12 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
-import {ItemInfo} from '../../Interfaces'
+import { ItemInfo } from '../../Interfaces'
 
 
 type ProductProps = {
@@ -17,19 +17,19 @@ type ProductState = {
     products: ItemInfo[]
 }
 class ProductFeed extends React.Component<ProductProps, ProductState>{
-    constructor(props: ProductProps){
+    constructor(props: ProductProps) {
         super(props);
-    this.state = {
-        products: []
+        this.state = {
+            products: []
+        }
     }
-    }
-    
-    fetchProducts(){
+
+    fetchProducts() {
         let url = `${APIURL}/items/available`
-        fetch(url,{
+        fetch(url, {
             method: 'GET',
             headers: new Headers({
-                'Content-type' : 'application/json',
+                'Content-type': 'application/json',
                 'Authorization': this.props.sessionToken
             })
         })
@@ -40,44 +40,45 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                     products: response.availableItems
                 }, () => console.log(this.state.products))
             })
+            .catch(err => console.log(err))
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchProducts()
     }
 
-    mapProducts(){
-        if(this.state.products){
+    mapProducts() {
+        if (this.state.products.length > 0) {
             return this.state.products.map((items, index) => {
                 let quantityAvailable = items.totalQuantity - items.quantitySold
-                return(
+                if (quantityAvailable > 0){
+                return (
                     <>
-                    <tr key={index}>
-                        <td>{items.name}</td>
-                        <td>{items.description}</td>
-                        <td>{items.volume}</td>
-                        <td>{items.volumeUnit}</td>
-                        <td>{items.weight}</td>
-                        <td>{items.weightUnit}</td>
-                        <td>{items.height}</td>
-                        <td>{items.width}</td>
-                        <td>{items.depth}</td>
-                        <td>{items.lengthUnit}</td>
-                        <td>{items.category}</td>
-                        <td>${items.price}</td>
-                        <td>{quantityAvailable}</td>
-                        <td>{items.maker_id}</td>
-                    </tr>
+                        <tr key={index}>
+                            <td>{items.name}</td>
+                            <td>{items.description}</td>
+                            <td>{items.volume}{items.volumeUnit}</td>
+                            <td>{items.weight}{items.weightUnit}</td>
+                            <td>{items.height}</td>
+                            <td>{items.width}</td>
+                            <td>{items.depth}</td>
+                            <td>{items.lengthUnit}</td>
+                            <td>{items.category}</td>
+                            <td>${items.price}</td>
+                            <td>{quantityAvailable}</td>
+                            <td>{items.maker_id}</td>
+                        </tr>
                     </>
                 )
+                }
             })
         } else {
-            return <><tr>No Items Available</tr></>
+            return <><tr><td colSpan={12}>No Items Available</td></tr></>
         }
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <table>
                     <thead>
@@ -85,13 +86,11 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                             <th>Item Name</th>
                             <th>Item Description</th>
                             <th>Volume</th>
-                            <th>Volume Units</th>
                             <th>Weight</th>
-                            <th>Weight Unit</th>
                             <th>Height</th>
                             <th>Width</th>
                             <th>Depth</th>
-                            <th>Units</th>
+                            <th>Unit</th>
                             <th>Category</th>
                             <th>Price(each)</th>
                             <th>Quantity Available</th>
@@ -101,7 +100,8 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                     <tbody>{this.mapProducts()}</tbody>
                 </table>
             </div>
-    )}
+        )
+    }
 };
 
 export default ProductFeed

@@ -13,29 +13,22 @@ import ViewItem from '../components/makerLinks/items/ViewItem'
 import ViewLocation from '../components/makerLinks/locations/ViewLocations'
 import AddLocation from '../components/makerLinks/locations/AddLocation'
 import ViewUserInfo from '../components/adminLinks/ViewUserInfo'
+import DeleteAccount from '../components/manageAccount/DeleteAccount';
+import EditItem from '../components/makerLinks/items/EditItem'
+import EditUserInfo from '../components/adminLinks/EditUserInfo';
+import DeleteItem from '../components/makerLinks/items/DeleteItem';
+import EditLocation from '../components/makerLinks/locations/EditLocation';
+import DeleteLocation from '../components/makerLinks/locations/DeleteLocation';
+import DeleteUser from '../components/adminLinks/DeleteUser';
+import MakeUserAdmin from '../components/adminLinks/MakeUserAdmin'
 
 type SidebarProps = {
     sessionToken: string,
-    productFeedView: boolean,
-    myAccountView: boolean,
-    adminAccountManager: boolean,
     userRole: string,
-    adminStatus: boolean,
-    myItemView: boolean,
-    myLocationView: boolean,
+    adminStatus: boolean | null,
+    currentUserId: number | undefined,
     updateSessionToken: (newToken: string) => void,
-    clearLocalStorage: () => void,
-    updateUserInfo: (role: string, admin: boolean) => void,
-    notProductView: () => void,
-    updateMyAccountView: () => void,
-    updateAdminAccount: () => void,
-    updateMyLocationView: () => void,
-    updateMyItemView: () => void,
-    productView: () => void,
-    notMyAccountView: () => void,
-    notAdminAccount: () => void,
-    notMyItemView: () => void,
-    notMyLocationView: () => void
+    updateUserInfo: (role: string, admin: boolean, userID: number) => void,
 }
 
 type SidebarState = {
@@ -48,19 +41,23 @@ class Sidebar extends React.Component<SidebarProps, {}>{
     }
 
     makerLinks() {
-        return this.props.userRole == 'maker' ? <><li><Link to='/addmyitems'>Add Items</Link></li>
+        return this.props.userRole == 'maker' ? <>
+            <hr/>
+            {/* <li><Link to='/addmyitems'>Add Items</Link></li> */}
             <li><Link to='/myitems'>View My Inventory</Link></li>
             {/* <li><Link to='/editmyitems'></Link></li> */}
             {/* <li><Link to='/deletemyitems'></Link></li> */}
-
+            <hr/>
             <li><Link to='/mylocations'>View My Listing Locations</Link></li>
-            <li><Link to='/addmylocations'>Add a Listing Location</Link></li>
+            {/* <li><Link to='/addmylocations'>Add a Listing Location</Link></li> */}
             {/* <li><Link to='/editmylocation'></Link></li> */}
             {/* <li><Link to='/deletemylocation'></Link></li> */}</> : <></>
     }
 
     adminLinks() {
-        return this.props.adminStatus ? <><li><Link to='/adminmanageaccount' onClick={this.props.updateAdminAccount}>Admin Account Manager</Link></li>
+        return this.props.adminStatus ? <>
+            <hr/>
+            <li><Link to='/adminmanageaccount' >Admin Account Manager</Link></li>
             {/* <li><Link to='/admineditaccount'></Link></li> */}
             {/* <li><Link to='/admindeleteaccount'></Link></li> */}
             {/* <li><Link to='/adminupdatetoadmin'></Link></li> */}</> : <></>
@@ -72,8 +69,9 @@ class Sidebar extends React.Component<SidebarProps, {}>{
                     <div className='sidebar-list-styling'>
                         <ul className='sidebar-list list-unstyled'>
                             <li><Link to='/productfeed'>Product Feed</Link></li>
-                            <li><Link to='/viewmyaccount' onClick={this.props.updateMyAccountView}>View My Account</Link></li>
-                            <li><Link to='/editmyaccount'>Edit My Account</Link></li>
+                            <hr/>
+                            <li><Link to='/viewmyaccount'>View My Account</Link></li>
+                            {/* <li><Link to='/editmyaccount'>Edit My Account</Link></li> */}
                             {/* <li><Link to='/deletemyaccount'></Link></li> */}
 
                             {this.makerLinks()}
@@ -81,26 +79,26 @@ class Sidebar extends React.Component<SidebarProps, {}>{
                         </ul>
                     </div>
                     <Switch>
-                        <Route exact path='/viewmyaccount'><ViewAccount sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/viewmyaccount'><ViewAccount sessionToken={this.props.sessionToken} currentUserId={this.props.currentUserId}/></Route>
                         <Route exact path='/editmyaccount'><EditAccount sessionToken={this.props.sessionToken}/></Route>
-                        {/* <Route exact path='/deletemyaccount'></Route> */}
+                        <Route exact path='/deletemyaccount'><DeleteAccount sessionToken={this.props.sessionToken}/></Route>
 
                         <Route exact path='/productfeed'><ProductFeed sessionToken={this.props.sessionToken} /></Route>
 
                         <Route exact path='/myitems'><ViewItem sessionToken={this.props.sessionToken}/></Route>
-                        {/* <Route exact path='/editmyitems'></Route> */}
+                        <Route exact path='/editmyitems'><EditItem sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/addmyitems'><AddItem sessionToken={this.props.sessionToken}/></Route>
-                        {/* <Route exact path='/deletemyitems'></Route> */}
+                        <Route exact path='/deletemyitems'><DeleteItem sessionToken={this.props.sessionToken}/></Route>
 
                         <Route exact path='/mylocations'><ViewLocation sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/addmylocations'><AddLocation sessionToken={this.props.sessionToken}/></Route>
-                        {/* <Route exact path='/editmylocation'></Route> */}
-                        {/* <Route exact path='/deletemylocation'></Route> */}
+                        <Route exact path='/editmylocation'><EditLocation sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/deletemylocation'><DeleteLocation sessionToken={this.props.sessionToken}/></Route>
 
                         <Route exact path='/adminmanageaccount'><ViewUserInfo sessionToken={this.props.sessionToken}/></Route>
-                        {/* <Route exact path='/admineditaccount'></Route> */}
-                        {/* <Route exact path='/admindeleteaccount'></Route> */}
-                        {/* <Route exact path='/adminupdatetoadmin'></Route> */}
+                        <Route exact path='/admineditaccount'><EditUserInfo sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/admindeleteaccount'><DeleteUser sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/adminupdatetoadmin'><MakeUserAdmin sessionToken={this.props.sessionToken}/></Route>
                     </Switch>
                 </Router>
             </div>
