@@ -23,7 +23,7 @@ class App extends React.Component<{}, AppState>{
       currentUserId: undefined
     }
     this.updateSessionToken = this.updateSessionToken.bind(this)
-    this.checkSessionToken = this.checkSessionToken.bind(this)
+    this.checkLocalStorage = this.checkLocalStorage.bind(this)
   }
 
   updateSessionToken(newToken: string){
@@ -33,20 +33,21 @@ class App extends React.Component<{}, AppState>{
     })
   }
 
-  checkSessionToken(){
+  checkLocalStorage(){
     let localToken= localStorage.getItem('token')
     if(localToken){
         this.setState({
-            sessionToken: localToken
+            sessionToken: localToken,
         })
     }
   }
 
-  updateLocalStorage(newToken: string, role: string, adminStatus: boolean){
+  updateLocalStorage(newToken: string, role: string, adminStatus: boolean| null){
+    let adminStatusString = adminStatus ? 'true' : 'false'
     console.log("admin", adminStatus)
-    localStorage.setItem("token2", newToken)
+    localStorage.setItem("token", newToken)
     localStorage.setItem("role", role);
-    // localStorage.setItem("admin", adminStatus);
+    localStorage.setItem("admin", adminStatusString);
   };
 
   clearLocalStorage = () => {
@@ -54,7 +55,7 @@ class App extends React.Component<{}, AppState>{
     this.setState({
       sessionToken: ''
     })
-    this.checkSessionToken()
+    this.checkLocalStorage()
   };
 
   updateUserInfo= (role: string, admin:boolean, userID: number) => {
@@ -67,14 +68,23 @@ class App extends React.Component<{}, AppState>{
   }
 
   componentDidMount(){
-    this.checkSessionToken()
+    console.log('mounted state', this.state)
+    this.checkLocalStorage()
   }
 
+  componentWillUnmount(){
+    console.log('unmounted state', this.state)
+    this.clearLocalStorage()
+  }
+
+  componentDidUpdate(){
+    console.log('updated state', this.state)
+  }
 
   protectedView(){
     return this.state.sessionToken ? 
       <><Header sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId}/>
-      <Sidebar sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId}/>
+      <Sidebar sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId}/>
       {/* <Display sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} productFeedView={this.state.productFeedView} myItemView={this.state.myItemView} notProductView={this.notProductView} myLocationView={this.state.myLocationView} myAccountView={this.state.myAccountView} adminAccountManager={this.state.adminAccountManager} updateMyLocationView={this.updateMyLocationView} updateMyItemView={this.updateMyItemView} updateMyAccountView={this.updateMyAccountView} updateAdminAccount={this.updateAdminAccount} productView={this.productView} notMyAccountView={this.notMyAccountView} notAdminAccount={this.notAdminAccount} notMyItemView={this.notMyItemView} notMyLocationView={this.notMyLocationView}/>*/}</>
       : <><Auth sessionToken={this.state.sessionToken} userRole={this.state.userRole} currentUserId={this.state.currentUserId} adminStatus={this.state.adminStatus} updateSessionToken={this.updateSessionToken} updateLocalStorage={this.updateLocalStorage} clearLocalStorage={this.clearLocalStorage} updateUserInfo={this.updateUserInfo}/></>
   }

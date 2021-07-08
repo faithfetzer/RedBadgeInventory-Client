@@ -2,40 +2,61 @@ import {
     BrowserRouter as Router,
     Switch,
     Link, 
-    Route
+    Route,
+    useParams
     } from 'react-router-dom';
 import React from 'react'
 import {ItemInfo} from '../../../Interfaces'
+import APIURL from '../../../helpers/environment'
 
 type DeleteItemProps = {
     sessionToken: string,
     // id: number | undefined,
     // item: ItemInfo
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
+    changeDeleteView: () => void,
+    setItemToChange: (id: number | null) => void
 }
 
-class DeleteItem extends React.Component<DeleteItemProps, {}>{
+type DeleteItemState = {
+    item: ItemInfo
+}
+
+class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
     constructor(props: DeleteItemProps){
         super(props)
+        this.state= {
+            item: {
+                id: undefined,
+                maker_id : undefined,
+                name : "",
+                description : "",
+                volume: undefined,
+                volumeUnit: "",
+                weight: undefined,
+                weightUnit: "",
+                height: undefined,
+                width: undefined,
+                depth: undefined,
+                lengthUnit : "",
+                category: "",
+                available : false,
+                price :  undefined,
+                totalQuantity : 0,
+                location_id : undefined,
+                quantityListed : undefined,
+                quantitySold: 0
+            }
+        }
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleSubmit(){
+
     }
 
     render(){

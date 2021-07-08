@@ -2,39 +2,48 @@ import {
     BrowserRouter as Router,
     Switch,
     Link, 
-    Route
+    Route,
+    useParams
     } from 'react-router-dom';
 import React from 'react'
+import { LocationInfo } from '../../../Interfaces';
+import APIURL from '../../../helpers/environment'
 
 type DeleteLocationProps = {
     sessionToken: string,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
+    changeDeleteView: () => void,
+    setLocationToChange: (id: number | null) => void
 }
 
-class DeleteLocation extends React.Component<DeleteLocationProps, {}>{
+type DeleteLocationState={
+    location: LocationInfo
+}
+
+class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocationState>{
     constructor(props: DeleteLocationProps){
         super(props)
+        this.state= {
+            location:{
+                id: undefined,
+                maker_id: undefined,
+                name: "",
+                url: "",
+                address: "",
+                notes: ""
+            }
+        }
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
+    handleSubmit(){
+
+    }
+    
     render(){
     return(
         <div>

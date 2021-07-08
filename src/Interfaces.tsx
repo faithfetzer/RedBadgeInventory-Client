@@ -4,7 +4,7 @@ export interface UserInfo {
     lastName: string,
     email: string,
     password: string,
-    admin: boolean,
+    admin: boolean | null,
     role: string,
 }
 

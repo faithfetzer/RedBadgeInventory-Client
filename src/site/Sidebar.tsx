@@ -28,6 +28,7 @@ type SidebarProps = {
     adminStatus: boolean | null,
     currentUserId: number | undefined,
     updateSessionToken: (newToken: string) => void,
+    clearLocalStorage: () => void,
     updateUserInfo: (role: string, admin: boolean, userID: number) => void,
 }
 
@@ -79,23 +80,23 @@ class Sidebar extends React.Component<SidebarProps, {}>{
                         </ul>
                     </div>
                     <Switch>
-                        <Route exact path='/viewmyaccount'><ViewAccount sessionToken={this.props.sessionToken} currentUserId={this.props.currentUserId}/></Route>
-                        <Route exact path='/editmyaccount'><EditAccount sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/deletemyaccount'><DeleteAccount sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/viewmyaccount'><ViewAccount updateUserInfo={this.props.updateUserInfo} sessionToken={this.props.sessionToken} adminStatus={this.props.adminStatus} currentUserId={this.props.currentUserId}/></Route>
+                        <Route exact path='/editmyaccount'><EditAccount updateUserInfo={this.props.updateUserInfo} sessionToken={this.props.sessionToken} adminStatus={this.props.adminStatus} currentUserId={this.props.currentUserId}/></Route>
+                        <Route exact path='/deletemyaccount'><DeleteAccount clearLocalStorage={this.props.clearLocalStorage} sessionToken={this.props.sessionToken} adminStatus={this.props.adminStatus} currentUserId={this.props.currentUserId}/></Route>
 
                         <Route exact path='/productfeed'><ProductFeed sessionToken={this.props.sessionToken} /></Route>
 
                         <Route exact path='/myitems'><ViewItem sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/editmyitems'><EditItem sessionToken={this.props.sessionToken}/></Route>
+                        {/* <Route exact path='/editmyitems/'><EditItem sessionToken={this.props.sessionToken}/></Route> */}
                         <Route exact path='/addmyitems'><AddItem sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/deletemyitems'><DeleteItem sessionToken={this.props.sessionToken}/></Route>
+                        {/* <Route exact path='/deletemyitems/'><DeleteItem sessionToken={this.props.sessionToken}/></Route> */}
 
                         <Route exact path='/mylocations'><ViewLocation sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/addmylocations'><AddLocation sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/editmylocation'><EditLocation sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/deletemylocation'><DeleteLocation sessionToken={this.props.sessionToken}/></Route>
+                        {/* <Route exact path='/editmylocation/'><EditLocation sessionToken={this.props.sessionToken}/></Route> */}
+                        {/* <Route exact path='/deletemylocation/'><DeleteLocation sessionToken={this.props.sessionToken}/></Route> */}
 
-                        <Route exact path='/adminmanageaccount'><ViewUserInfo sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/adminmanageaccount'><ViewUserInfo sessionToken={this.props.sessionToken} /></Route>
                         <Route exact path='/admineditaccount'><EditUserInfo sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/admindeleteaccount'><DeleteUser sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/adminupdatetoadmin'><MakeUserAdmin sessionToken={this.props.sessionToken}/></Route>

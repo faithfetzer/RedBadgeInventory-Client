@@ -11,25 +11,10 @@ import APIURL from '../../helpers/environment'
 type ViewUserInfoProps = {
     sessionToken: string,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
 }
 
 type ViewUserInfoState = {
@@ -48,7 +33,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
                 lastName: "",
                 email: "",
                 password: "",
-                admin: false,
+                admin: null,
                 role: "",
             }
         }
@@ -66,7 +51,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
 
     handleSubmit(e: any) {
         e.preventDefault()
-        // console.log('submit')
+        console.log('submit')
         let urlForId = `${APIURL}/user/idadmin`
         let reqBody = {email: this.state.email}
 
@@ -103,7 +88,8 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
     }
 
     userInfoDisplay(){
-        return this.state.userInfo.id !== 0 || undefined  ? 
+        // console.log('user id', this.state.userInfo.id)
+        return this.state.userInfo.id === 0 || this.state.userInfo.id === undefined  ? <></> :
         <>
         <p>First Name: {this.state.userInfo.firstName}</p>
         <p>Last Name: {this.state.userInfo.lastName}</p>
@@ -113,7 +99,6 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
         <button><Link to='/admineditaccount'>Edit Account</Link></button>
         <button><Link to='/admindeleteaccount'>Delete Account</Link></button>
         </> 
-        : <></>
     }
 
     render() {

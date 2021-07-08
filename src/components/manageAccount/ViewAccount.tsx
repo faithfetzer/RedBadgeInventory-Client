@@ -11,30 +11,15 @@ import APIURL from '../../helpers/environment'
 type ViewAccountProps = {
     sessionToken: string,
     currentUserId: number | undefined
-    // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
+    adminStatus: boolean | null,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
-    // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
+    updateUserInfo: (role: string, admin:boolean, userID: number) => void
 }
 
 type ViewUserInfoState = {
-    userInfo: UserInfo
+    userInfo: UserInfo,
 }
 
 class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
@@ -47,8 +32,8 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
                 lastName: "",
                 email: "",
                 password: "",
-                admin: false,
-                role: "",
+                admin: null,
+                role: ""
             }
         }
     }
@@ -66,6 +51,7 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
             .then(response => response.json())
             .then((response) => {
                 console.log('response', response);
+                this.props.updateUserInfo(response.user.role, response.user.admin, response.user.id);
                 this.setState({
                     userInfo: {
                         id: response.user.id,
@@ -80,8 +66,11 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
             .catch(err => console.log(err))
     }
 
-    componentWillMount(){
+    componentDidMount(){
         this.fetchAccount()
+    }
+
+    componentDidUpdate(){
     }
 
     admin(){
@@ -96,8 +85,8 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
         <p>Email: {this.state.userInfo.email}</p>
         <p>Role: {this.state.userInfo.role}</p>
         <p>Admin: {this.admin()}</p>
-        <button><Link to='/admineditaccount'>Edit Account</Link></button>
-        <button><Link to='/admindeleteaccount'>Delete Account</Link></button>
+        <button><Link to='/editmyaccount'>Edit Account</Link></button>
+        <button><Link to='/deletemyaccount'>Delete Account</Link></button>
         </> 
         : <></>
     }

@@ -6,30 +6,15 @@ import {
     } from 'react-router-dom';
 import React from 'react'
 import {ItemInfo} from '../../../Interfaces'
-import { unwatchFile } from 'fs';
+import APIURL from '../../../helpers/environment'
 
 type AddItemProps = {
     sessionToken: string,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
 }
 
 type AddItemState = {
@@ -64,7 +49,11 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
         }
     }
 
-    handleChange(){
+    handleChange(e: React.ChangeEvent<HTMLInputElement>){
+        this.setState({
+            ...this.state,
+            item: {
+            [e.target.name] : e.target.value}} as any)
 
     }
 
@@ -136,6 +125,7 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
                 <label htmlFor='quantitySold'>Quantity Sold</label>
                 <br/>
                 <input type="number" id='quantitySold' name='quantitySold' value={this.state.item.quantitySold} onChange={this.handleChange}></input>
+                <br/>
                 <button type="submit">Submit</button>
             </form>
         </div>

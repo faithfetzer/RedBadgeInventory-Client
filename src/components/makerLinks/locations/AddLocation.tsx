@@ -6,6 +6,7 @@ import {
     } from 'react-router-dom';
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
+import APIURL from '../../../helpers/environment'
 
 type AddLocationProps = {
     sessionToken: string,

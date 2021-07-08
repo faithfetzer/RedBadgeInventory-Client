@@ -9,28 +9,14 @@ import React from 'react'
 type DeleteUserProps = {
     sessionToken: string,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
 }
+type DeleteUserState = {}
 
-class DeleteUser extends React.Component<DeleteUserProps, {}>{
+class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
     constructor(props: DeleteUserProps){
         super(props)
     }

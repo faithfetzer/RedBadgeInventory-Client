@@ -35,14 +35,20 @@ type ViewItemProps = {
 }
 
 type ViewItemState = {
-    myProducts: ItemInfo[]
+    myProducts: ItemInfo[],
+    editItemView: boolean,
+    deleteItemView: boolean,
+    itemToChange: number | null
 }
 
 class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     constructor(props: ViewItemProps) {
         super(props)
         this.state = {
-            myProducts: []
+            myProducts: [],
+            editItemView: false,
+            deleteItemView: false,
+            itemToChange: null
         }
     }
 
@@ -88,9 +94,10 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
                             <td>${items.price}</td>
                             <td>{quantityAvailable}</td>
                             <td>{items.maker_id}</td>
-                            <td><button><Link to={{pathname:'/editmyitems', state:{id: items.id}}}>Edit</Link></button></td>
-                            <td><button><Link to={{pathname:'/deletemyitems'}}>Delete</Link></button></td>
+                            <td><button onClick={this.changeEditView}>Edit</button></td>
+                            <td><button onClick={this.changeDeleteView}>Delete</button></td>
                         </tr>
+                        
                     </>
                 )
             })
@@ -99,31 +106,83 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
         }
     }
 
+    setItemToChange(id: number | null){
+        this.setState({
+            itemToChange: id
+        })
+    }
+
+    changeEditView = () =>{
+        this.setState({
+            editItemView: !this.state.editItemView
+        })
+    }
+
+    changeDeleteView =() => {
+        this.setState({
+            deleteItemView: !this.state.deleteItemView
+        })
+    }
+
+    editItemView(){
+        return(
+            <div>
+                <button onClick={this.changeEditView}>Cancel</button>
+                <EditItem sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setItemToChange={this.setItemToChange}/>
+            </div>
+        )
+    }
+
+    deleteItemView(){
+        return(
+            <div>
+                <button onClick={this.changeDeleteView}>Cancel</button>
+                <DeleteItem sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setItemToChange={this.setItemToChange}/>
+            </div>
+        )
+    }
+
+    viewController(){
+        if(this.state.editItemView){
+            return <>{this.editItemView()}</>
+        } else if(this.state.deleteItemView){
+            return <>{this.deleteItemView()}</>
+        } else {
+            return (
+                <>
+                    <button><Link to='/addmyitems'>Add Items</Link></button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Item Description</th>
+                                <th>Volume</th>
+                                <th>Weight</th>
+                                <th>Height</th>
+                                <th>Width</th>
+                                <th>Depth</th>
+                                <th>Units</th>
+                                <th>Category</th>
+                                <th>Price(each)</th>
+                                <th>Quantity Available</th>
+                                <th>Maker Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>{this.mapProducts()}</tbody>
+                    </table>
+                </>
+    
+            )
+        }
+    }
+
+
     render() {
         return (
             <div>
-                <button><Link to='/addmyitems'>Add Items</Link></button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Item Description</th>
-                            <th>Volume</th>
-                            <th>Weight</th>
-                            <th>Height</th>
-                            <th>Width</th>
-                            <th>Depth</th>
-                            <th>Units</th>
-                            <th>Category</th>
-                            <th>Price(each)</th>
-                            <th>Quantity Available</th>
-                            <th>Maker Contact</th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.mapProducts()}</tbody>
-                </table>
-
+                {this.viewController()}
             </div>
+
         )
     }
 };
