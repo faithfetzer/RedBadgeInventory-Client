@@ -7,9 +7,12 @@ import {
 import React from 'react'
 import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
+import MakeUserAdmin from './MakeUserAdmin'
 
 type EditUserInfoProps = {
     sessionToken: string,
+    userEmail: string,
+    userID: number | undefined
     // adminStatus: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
@@ -20,7 +23,8 @@ type EditUserInfoProps = {
 type EditUserInfoState = {
     email: '',
     userToEdit: UserInfo,
-    newUserInfo: UserInfo
+    newUserInfo: UserInfo,
+    updateAdminStatus: boolean
 }
 
 class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>{
@@ -46,6 +50,7 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
                 admin: null,
                 role: "",
             },
+            updateAdminStatus: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -105,25 +110,29 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
         <p>Email: {this.state.userToEdit.email}</p>
         <p>Role: {this.state.userToEdit.role}</p>
         <p>Admin: {this.admin()}</p>
-        <p><button><Link to='/adminupdatetoadmin'>Make User Admin</Link></button></p>
         <button>Submit Changes</button>
+        <button onClick={this.adminStatusToggle}>{this.button()}</button>
+                {this.adminStatus()}
         </> 
     }
 
+    button(){
+        return this.state.updateAdminStatus ? 'Cancel' : 'Give User Admin Access'
+    }
+    adminStatusToggle(){
+        this.setState({
+            updateAdminStatus: !this.state.updateAdminStatus
+        })
+    }
 
+    adminStatus(){
+        return this.state.updateAdminStatus ? <><MakeUserAdmin sessionToken={this.props.sessionToken} userEmail={this.props.userEmail}/></> :<></>
+    }
     render(){
     return(
-        <div>
-                <h3>User Account To Edit:</h3>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor='email'>Email</label>
-                    <br />
-                    <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
-                    <br />
-                    <button type='submit'>Search</button>
-                </form>
+        <div>Edit
                 {this.userInfoDisplay()}
-            </div >
+        </div >
     )}
 };
 

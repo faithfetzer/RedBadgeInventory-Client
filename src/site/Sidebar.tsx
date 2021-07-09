@@ -97,9 +97,9 @@ class Sidebar extends React.Component<SidebarProps, {}>{
                         {/* <Route exact path='/deletemylocation/'><DeleteLocation sessionToken={this.props.sessionToken}/></Route> */}
 
                         <Route exact path='/adminmanageaccount'><ViewUserInfo sessionToken={this.props.sessionToken} /></Route>
-                        <Route exact path='/admineditaccount'><EditUserInfo sessionToken={this.props.sessionToken}/></Route>
+                        {/* <Route exact path='/admineditaccount'><EditUserInfo sessionToken={this.props.sessionToken}/></Route>
                         <Route exact path='/admindeleteaccount'><DeleteUser sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/adminupdatetoadmin'><MakeUserAdmin sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/adminupdatetoadmin'><MakeUserAdmin sessionToken={this.props.sessionToken}/></Route> */}
                     </Switch>
                 </Router>
             </div>
