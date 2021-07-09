@@ -4,9 +4,13 @@ import {
     Link,
     Route
 } from 'react-router-dom';
+import {Modal, ModalBody} from 'reactstrap'
+import {Check, Clear} from '@material-ui/icons'
 import React from 'react'
-import {UserInfo} from '../../Interfaces';
+import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
+import EditUserInfo from './EditUserInfo'
+import DeleteUser from './DeleteUser'
 
 type ViewUserInfoProps = {
     sessionToken: string,
@@ -19,7 +23,9 @@ type ViewUserInfoProps = {
 
 type ViewUserInfoState = {
     email: string,
-    userInfo: UserInfo
+    userInfo: UserInfo,
+    openEdit: boolean,
+    openDelete: boolean
 }
 
 class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>{
@@ -35,11 +41,17 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
                 password: "",
                 admin: null,
                 role: "",
-            }
+            },
+            openEdit: false,
+            openDelete: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.userInfoDisplay = this.userInfoDisplay.bind(this)
+        this.handleCloseDelete =this.handleCloseDelete.bind(this)
+        this.handleCloseEdit = this.handleCloseEdit.bind(this)
+        this.handleOpenDelete = this.handleOpenDelete.bind(this)
+        this.handleOpenEdit = this.handleOpenEdit.bind(this)
     }
 
     handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -53,7 +65,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
         e.preventDefault()
         console.log('submit')
         let urlForId = `${APIURL}/user/idadmin`
-        let reqBody = {email: this.state.email}
+        let reqBody = { email: this.state.email }
 
         // console.log(reqBody)
         fetch(urlForId, {
@@ -83,22 +95,50 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
             .catch(err => console.log(err))
     }
 
-    admin(){
-        return this.state.userInfo.admin ? 'Yes' : 'No'
+    admin() {
+        return this.state.userInfo.admin ? <Check/> : <Clear/>
     }
 
-    userInfoDisplay(){
+    userInfoDisplay() {
         // console.log('user id', this.state.userInfo.id)
-        return this.state.userInfo.id === 0 || this.state.userInfo.id === undefined  ? <></> :
-        <>
-        <p>First Name: {this.state.userInfo.firstName}</p>
-        <p>Last Name: {this.state.userInfo.lastName}</p>
-        <p>Email: {this.state.userInfo.email}</p>
-        <p>Role: {this.state.userInfo.role}</p>
-        <p>Admin: {this.admin()}</p>
-        <button><Link to='/admineditaccount'>Edit Account</Link></button>
-        <button><Link to='/admindeleteaccount'>Delete Account</Link></button>
-        </> 
+        return this.state.userInfo.id === 0 || this.state.userInfo.id === undefined ? <></> :
+            <>
+                <p>First Name: {this.state.userInfo.firstName}</p>
+                <p>Last Name: {this.state.userInfo.lastName}</p>
+                <p>Email: {this.state.userInfo.email}</p>
+                <p>Role: {this.state.userInfo.role}</p>
+                <p>Admin: {this.admin()}</p>
+                <button type="button" onClick={this.handleOpenEdit}>Edit Account</button>
+                <button type="button" onClick={this.handleOpenDelete}>Delete Account</button>
+            </>
+    }
+
+    handleOpenEdit() {
+        console.log('open edit')
+        this.setState({
+            openEdit: true
+        })
+    }
+    handleOpenDelete() {
+        console.log('open delete')
+        this.setState({
+            openDelete: true
+        })
+    }
+
+    handleCloseEdit() {
+        console.log('close edit')
+        this.setState({
+            openEdit: false
+        })
+    }
+
+    handleCloseDelete() {
+        console.log('close delete')
+
+        this.setState({
+            openDelete: false
+        })
     }
 
     render() {
@@ -113,9 +153,21 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
                     <button type='submit'>Search</button>
                 </form>
                 {this.userInfoDisplay()}
+                <Modal isOpen={this.state.openEdit}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description" className={'modal-dialog-centered'}>
+                        <ModalBody>
+                        <button onClick={this.handleCloseEdit}>Cancel</button>
+                        <EditUserInfo sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id}/></ModalBody>
+                        </Modal>
+                    <Modal isOpen={this.state.openDelete}
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"><ModalBody>
+                            <button onClick={this.handleCloseDelete}>Cancel</button>
+                            <DeleteUser sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody></Modal>
             </div >
-        )
+                )
     }
 };
 
-export default ViewUserInfo
+                export default ViewUserInfo

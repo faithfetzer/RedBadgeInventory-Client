@@ -8,6 +8,8 @@ import React from 'react'
 
 type DeleteUserProps = {
     sessionToken: string,
+    userEmail: string,
+    userID: number | undefined
     // adminStatus: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
@@ -24,7 +26,7 @@ class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
     render(){
     return(
         <div>
-            <p>Delete User</p>
+            <p>Delete User Account</p>
         </div>
     )}
 };

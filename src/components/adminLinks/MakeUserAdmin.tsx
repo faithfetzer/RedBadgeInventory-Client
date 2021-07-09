@@ -8,6 +8,7 @@ import React from 'react'
 
 type MakeUserAdminProps = {
     sessionToken: string,
+    userEmail: string,
     // adminStatus: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
