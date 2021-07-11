@@ -1,13 +1,15 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
 import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
 import MakeUserAdmin from './MakeUserAdmin'
+import { Check, Clear, Delete } from '@material-ui/icons'
+import { Button } from '@material-ui/core'
 
 type EditUserInfoProps = {
     sessionToken: string,
@@ -28,12 +30,12 @@ type EditUserInfoState = {
 }
 
 class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>{
-    constructor(props: EditUserInfoProps){
+    constructor(props: EditUserInfoProps) {
         super(props)
         this.state = {
             email: '',
             userToEdit: {
-                id: undefined,
+                id: this.props.userID,
                 firstName: "",
                 lastName: "",
                 email: "",
@@ -41,8 +43,8 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
                 admin: null,
                 role: "",
             },
-            newUserInfo : {
-                id: undefined,
+            newUserInfo: {
+                id: this.props.userID,
                 firstName: "",
                 lastName: "",
                 email: "",
@@ -54,25 +56,60 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.userInfoDisplay = this.userInfoDisplay.bind(this)
+        this.fetchAccount = this.fetchAccount.bind(this)
+        this.adminStatusToggle = this.adminStatusToggle.bind(this)
     }
 
     handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        // this.setState({
-        //     email: e.target.value
-        // })
+        this.setState({
+            ...this.state,
+            newUserInfo: {
+                [e.target.name]: e.target.value
+            } as any
+        }, () => console.log(this.state.newUserInfo))
     }
 
     handleSubmit(e: any) {
         e.preventDefault()
-        console.log('submit')
-        let urlForId = `${APIURL}/user/idadmin`
-        let reqBody = {email: this.state.email}
+        console.log('submit', this.state.newUserInfo)
+        let reqBody = {
+            firstName: this.state.newUserInfo.firstName,
+            lastName: this.state.newUserInfo.lastName,
+            email: this.state.newUserInfo.email,
+            role: this.state.newUserInfo.role
+        }
+        let url = `${APIURL}/user/update/${this.props.userID}`
 
-        // console.log(reqBody)
-        fetch(urlForId, {
-            method: 'POST',
+        console.log(reqBody, url)
+        fetch(url, {
+            method: 'PUT',
             body: JSON.stringify(reqBody),
+            headers: new Headers({
+                'Content-type': 'application/json',
+                'Authorization': this.props.sessionToken
+            })
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                this.fetchAccount()
+                this.success()
+                console.log(response)
+            })
+            .catch(err => {
+                console.log(err)
+                this.failure(err)
+            })
+    }
+
+    admin() {
+        return this.state.userToEdit.admin ? <Check /> : <Clear />
+    }
+
+    fetchAccount() {
+        let url = `${APIURL}/user/info/${this.props.userID}`
+        console.log('fetch user info', url)
+        fetch(url, {
+            method: 'GET',
             headers: new Headers({
                 'Content-type': 'application/json',
                 'Authorization': this.props.sessionToken
@@ -80,8 +117,8 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
         })
             .then(response => response.json())
             .then((response) => {
+                console.log('response', response);
                 this.setState({
-                    ...this.state,
                     userToEdit: {
                         id: response.user.id,
                         firstName: response.user.firstName,
@@ -89,51 +126,83 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
                         email: response.user.email,
                         password: response.user.password,
                         admin: response.user.admin,
-                        role: response.user.role,
+                        role: response.user.role
                     }
-                })
-                console.log('user to edit', this.state.userToEdit);
+                }, () => console.log('state', this.state))
             })
             .catch(err => console.log(err))
     }
 
-    admin(){
-        return this.state.userToEdit.admin ? 'Yes' : 'No'
+
+
+    success() {
+        alert("account updated")
     }
 
-    userInfoDisplay(){
-        // console.log('user id', this.state.userInfo.id)
-        return this.state.userToEdit.id === 0 || this.state.userToEdit.id === undefined  ? <></> :
-        <>
-        <p>First Name: {this.state.userToEdit.firstName}</p>
-        <p>Last Name: {this.state.userToEdit.lastName}</p>
-        <p>Email: {this.state.userToEdit.email}</p>
-        <p>Role: {this.state.userToEdit.role}</p>
-        <p>Admin: {this.admin()}</p>
-        <button>Submit Changes</button>
-        <button onClick={this.adminStatusToggle}>{this.button()}</button>
-                {this.adminStatus()}
-        </> 
+    failure(error: string) {
+        alert(`error: unable to update account ${error}`)
     }
 
-    button(){
-        return this.state.updateAdminStatus ? 'Cancel' : 'Give User Admin Access'
+    button() {
+        return this.state.updateAdminStatus ? <><Clear/>'Cancel'</> : 'Update User Admin Access'
     }
-    adminStatusToggle(){
+    adminStatusToggle() {
         this.setState({
             updateAdminStatus: !this.state.updateAdminStatus
         })
     }
 
-    adminStatus(){
-        return this.state.updateAdminStatus ? <><MakeUserAdmin sessionToken={this.props.sessionToken} userEmail={this.props.userEmail}/></> :<></>
+    adminStatus() {
+        return this.state.updateAdminStatus ? <><MakeUserAdmin userAdminStatus={this.state.userToEdit.admin} sessionToken={this.props.sessionToken} userEmail={this.state.userToEdit.email} fetchAccount={this.fetchAccount}/></> : <></>
     }
-    render(){
-    return(
-        <div>Edit
-                {this.userInfoDisplay()}
-        </div >
-    )}
+
+    componentDidMount() {
+        this.fetchAccount()
+    }
+
+    render() {
+        return (
+            <div>
+                <h3>Edit User's Account Infomation</h3>
+                <p>(current information)</p>
+                <form onSubmit={this.handleSubmit}>
+                    <label htmlFor='firstName'>First Name</label>
+                    <br />
+                    ({this.state.userToEdit.firstName})
+                    <br />
+                    <input type="text" name='firstName' id="firstName" placeholder={this.state.userToEdit.firstName} value={this.state.newUserInfo.firstName} onChange={this.handleChange}></input>
+                    <br />
+                    <label htmlFor='lastName'>Last Name</label>
+                    <br />
+                    ({this.state.userToEdit.lastName})
+                    <br />
+                    <input type="text" name='lastName' id='lastName' placeholder={this.state.userToEdit.lastName} onChange={this.handleChange}></input>
+                    <br />
+                    <label htmlFor='role'>Role</label>
+                    <br />
+                    ({this.state.userToEdit.role})
+                    <br />
+                    <fieldset id='role' placeholder={this.state.userToEdit.role}>
+                        <label htmlFor='maker'>Maker</label>
+                        <input type="radio" name='role' id='maker' value='maker' onChange={this.handleChange} />
+                        <label htmlFor='buyer'>Buyer</label>
+                        <input type="radio" name='role' id='buyer' value='buyer' onChange={this.handleChange} />
+                    </fieldset>
+                    <label htmlFor='email'>Email</label>
+                    <br />
+                    ({this.state.userToEdit.email})
+                    <br />
+                    <input type="email" id='email' name='email' placeholder={this.state.userToEdit.email} onChange={this.handleChange}></input>
+                    <br />
+                    <br />
+                    <Button variant="contained" type='submit'>Save Changes</Button>
+                </form>
+                {this.adminStatus()}
+                <Button onClick={this.adminStatusToggle}>{this.button()}</Button>
+                
+            </div >
+        )
+    }
 };
 
 export default EditUserInfo

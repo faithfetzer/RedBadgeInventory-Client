@@ -8,9 +8,14 @@ import {
 import React from 'react'
 import {ItemInfo} from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
+import {Button} from '@material-ui/core'
+import {Clear} from '@material-ui/icons'
+
+// PUT /items/update/:id const {name, description,volume,volumeUnit,weight,weightUnit,height,width,depth,lengthUnit,category,available,price,totalQuantity,location,quantityListed,quantitySold} = req.body
 
 type EditItemProps = {
     sessionToken: string,
+    itemToChange: number | null
     // id: number | undefined,
     // item: ItemInfo
     // adminStatus: boolean,
@@ -18,6 +23,7 @@ type EditItemProps = {
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
+    fetchItems: () => void,
     changeEditView: () => void,
     setItemToChange: (id: number | null) => void
 }
@@ -28,18 +34,12 @@ type EditItemState = {
 }
 
 
-// const stateImport: FunctionComponent = () =>{
-//     const location = useLocation()
-//     console.log('edit', location.id, location.items)
-// }
-
 class EditItem extends React.Component<EditItemProps, EditItemState>{
     constructor(props: EditItemProps){
         super(props)
         this.state= {
             item: {
-                id: undefined,
-                maker_id : undefined,
+                id: 0,
                 name : "",
                 description : "",
                 volume: undefined,
@@ -54,13 +54,20 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
                 available : false,
                 price :  undefined,
                 totalQuantity : 0,
-                location_id : undefined,
                 quantityListed : undefined,
-                quantitySold: 0
+                quantitySold: 0,
+                userId: undefined,
+                locationId: null,
+                user: {id: undefined,
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    password: "",
+                    admin: null,
+                    role: ""}
             },
             newItem: {
                 id: this.state.item.id,
-                maker_id : undefined,
                 name : "",
                 description : "",
                 volume: undefined,
@@ -75,9 +82,17 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
                 available : false,
                 price :  undefined,
                 totalQuantity : 0,
-                location_id : undefined,
                 quantityListed : undefined,
-                quantitySold: 0
+                quantitySold: 0,
+                userId: undefined,
+                locationId: null,
+                user: {id: undefined,
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    password: "",
+                    admin: null,
+                    role: ""}
             }
         }
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -124,7 +139,7 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
     return(
         <div>
             <p>Edit Item</p>
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={() => {this.handleSubmit(); this.props.setItemToChange(null); this.props.changeEditView(); this.props.fetchItems()}}>
                 <label htmlFor='name'>Item Name</label>
                 <br/>
                 <input type="string" id='name' name='name' value={this.state.item.name} onChange={this.handleChange}></input>
@@ -175,7 +190,7 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
                 <br/>
                 <label htmlFor='location'>Location</label>
                 <br/>
-                <input type="number" id='location' name='location' value={this.state.item.location_id} onChange={this.handleChange}></input>
+                {/* <input type="number" id='location' name='location' value={this.state.item.locationId} onChange={this.handleChange}></input> */}
                 <br/>
                 <label htmlFor='quantityListed'>Quantity Listed</label>
                 <br/>
@@ -185,7 +200,7 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
                 <br/>
                 <input type="number" id='quantitySold' name='quantitySold' value={this.state.item.quantitySold} onChange={this.handleChange}></input>
                 <br/>
-                <button type="submit">Submit</button>
+                <Button variant="contained" type="submit">Submit</Button>
             </form>
         </div>
     )}

@@ -16,12 +16,14 @@ type ProductProps = {
 type ProductState = {
     products: ItemInfo[]
 }
+
 class ProductFeed extends React.Component<ProductProps, ProductState>{
     constructor(props: ProductProps) {
         super(props);
         this.state = {
             products: []
         }
+        this.fetchProducts = this.fetchProducts.bind(this)
     }
 
     fetchProducts() {
@@ -37,7 +39,8 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
             .then((response) => {
                 console.log('response', response);
                 this.setState({
-                    products: response.availableItems
+                    ...this.state,
+                    products: [response.availableItems]
                 }, () => console.log(this.state.products))
             })
             .catch(err => console.log(err))
@@ -48,34 +51,41 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
     }
 
     mapProducts() {
-        if (this.state.products.length > 0) {
+        // console.log('map')
+        if (this.state.products) {
+            // let productMap = JSON.stringify(this.state.products)
+            // console.log(productMap)
             return this.state.products.map((items, index) => {
-                let quantityAvailable = items.totalQuantity - items.quantitySold
-                if (quantityAvailable > 0){
-                return (
-                    <>
-                        <tr key={index}>
-                            <td>{items.name}</td>
-                            <td>{items.description}</td>
-                            <td>{items.volume}{items.volumeUnit}</td>
-                            <td>{items.weight}{items.weightUnit}</td>
-                            <td>{items.height}</td>
-                            <td>{items.width}</td>
-                            <td>{items.depth}</td>
-                            <td>{items.lengthUnit}</td>
-                            <td>{items.category}</td>
-                            <td>${items.price}</td>
-                            <td>{quantityAvailable}</td>
-                            <td>{items.maker_id}</td>
-                        </tr>
-                    </>
-                )
-                }
+                // let quantityAvailable = items.totalQuantity - items.quantitySold
+                // if (quantityAvailable > 0) {
+                    console.log('mapinfo', [items].length)
+                    return (
+                        <>{JSON.stringify(items)}
+                            <tr key={index}>
+                                <td>{items.name}</td>
+                                <td>{items.name}</td>
+                                <td>{items.description}</td>
+                                <td>{items.volume}{items.volumeUnit}</td>
+                                <td>{items.weight}{items.weightUnit}</td>
+                                <td>{items.height}</td>
+                                <td>{items.width}</td>
+                                <td>{items.depth}</td>
+                                <td>{items.lengthUnit}</td>
+                                <td>{items.category}</td>
+                                <td>${items.price}</td>
+                                {/* <td>{quantityAvailable}</td> */}
+                                {/* <td>{items.user.email}</td> */}
+                            </tr>
+                        </>
+                    )
+                // }
             })
         } else {
             return <><tr><td colSpan={12}>No Items Available</td></tr></>
         }
     }
+
+    
 
     render() {
         return (

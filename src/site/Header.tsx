@@ -5,6 +5,10 @@ import {
     Route
     } from 'react-router-dom';
 import React from 'react'
+import {Button} from '@material-ui/core'
+import {ExitToApp} from '@material-ui/icons'
+import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles'
+
 
 
 type HeaderProps = {
@@ -57,7 +61,7 @@ class Header extends React.Component<HeaderProps, {}>{
             {/* {this.manageMyAccount()} */}
             {/* {this.makerButtons()}    */}
             {/* {this.productFeed()} */}
-            <button onClick={this.props.clearLocalStorage}>Log Out</button>
+            <Button variant="contained" color="secondary" onClick={this.props.clearLocalStorage}><ExitToApp/>Log Out</Button>
             {/* <Router>
                 <Link to='managemyaccount'>Manage My Account</Link>
                 <Link to='productfeed'>Product Feed</Link>

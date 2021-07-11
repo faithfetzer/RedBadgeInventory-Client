@@ -8,9 +8,14 @@ import {
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
+import {Button} from '@material-ui/core'
+import {Delete, Clear} from '@material-ui/icons'
+
+// DELETE /locations/delete/:id
 
 type DeleteLocationProps = {
     sessionToken: string,
+    currentUserId: number | undefined,
     // adminStatus: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
@@ -30,11 +35,11 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
         this.state= {
             location:{
                 id: undefined,
-                maker_id: undefined,
                 name: "",
                 url: "",
                 address: "",
-                notes: ""
+                notes: "",
+                userId: this.props.currentUserId
             }
         }
         this.handleSubmit = this.handleSubmit.bind(this)

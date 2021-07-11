@@ -9,9 +9,12 @@ import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
 import EditLocation from './EditLocation'
 import DeleteLocation from './DeleteLocation'
+import {Button} from '@material-ui/core'
+import {Delete, Clear} from '@material-ui/icons'
 
 type ViewLocationProps = {
     sessionToken: string,
+    currentUserId: number | undefined,
     // adminStatus: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
@@ -70,8 +73,8 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
                             <td>{locations.url}</td>
                             <td>{locations.address}</td>
                             <td>{locations.notes}</td>
-                            <td><button onClick={this.changeEditView}>Edit</button></td>
-                            <td><button onClick={this.changeDeleteView}>Delete</button></td>
+                            <td><Button variant="contained" onClick={this.changeEditView}>Edit</Button></td>
+                            <td><Button variant="contained" color="secondary" onClick={this.changeDeleteView}><Delete/>Delete</Button></td>
                         </tr>
                     </>
                 )
@@ -102,7 +105,7 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
     editLocationView(){
         return(
             <div>
-                <button onClick={this.changeEditView}>Cancel</button>
+                <Button variant="contained" onClick={this.changeEditView}><Clear/>Cancel</Button>
                 <EditLocation sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange}/>
             </div>
         )
@@ -111,8 +114,8 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
     deleteLocationView(){
         return(
             <div>
-                <button onClick={this.changeDeleteView}>Cancel</button>
-                <DeleteLocation sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange}/>
+                <Button variant="contained" onClick={this.changeDeleteView}><Clear/>Cancel</Button>
+                <DeleteLocation currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange}/>
             </div>
         )
     }
@@ -125,7 +128,7 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
         } else {
             return(
             <>
-            <button><Link to='/addmylocations'>Add a Listing Location</Link></button>
+            <Button variant="contained"><Link to='/addmylocations'>Add a Listing Location</Link></Button>
                 <table>
                     <thead>
                         <tr>

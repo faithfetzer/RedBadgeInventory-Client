@@ -2,6 +2,7 @@ import React from "react";
 import { ThisExpression, ThisTypeNode, transpileModule } from "typescript";
 import {UserInfo} from '../../Interfaces';
 import APIURL from '../../helpers/environment'
+import {Button} from '@material-ui/core'
 
 type AuthProps = {
     sessionToken: string,
@@ -121,11 +122,11 @@ class Auth extends React.Component<AuthProps, AuthState>{
     render(){
         return(
             <div>
-                Auth
                 <br/>
-                {this.title()}
+                
                 <br/>
-                <button onClick={this.loginToggle}>{this.button()}</button>
+                <Button variant="contained" onClick={this.loginToggle}>{this.button()}</Button>
+                <h3>{this.title()}</h3>
                 <form onSubmit={this.handleSubmit}>
                     {this.formFields()}
                     <label htmlFor='email'>Email</label>
@@ -136,7 +137,7 @@ class Auth extends React.Component<AuthProps, AuthState>{
                     <br/>
                     <input type="text" id='password' name='password' value={this.state.password} onChange={this.handleChange}></input>
                     <br/>
-                    <button type='submit'>{this.submitButton()}</button>
+                    <Button variant="contained" type='submit'>{this.submitButton()}</Button>
                 </form>
             </div>
         )

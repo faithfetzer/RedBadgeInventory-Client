@@ -5,8 +5,10 @@ import {
     Route
     } from 'react-router-dom';
 import React from 'react'
+import {Check, Clear, Delete} from '@material-ui/icons'
 import {UserInfo} from '../../Interfaces';
 import APIURL from '../../helpers/environment'
+import {Button} from '@material-ui/core'
 
 type ViewAccountProps = {
     sessionToken: string,
@@ -73,8 +75,8 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
     componentDidUpdate(){
     }
 
-    admin(){
-        return this.state.userInfo.admin ? 'Yes' : 'No'
+    admin() {
+        return this.state.userInfo.admin ? <Check/> : <Clear/>
     }
 
     userInfoDisplay(){
@@ -85,8 +87,9 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
         <p>Email: {this.state.userInfo.email}</p>
         <p>Role: {this.state.userInfo.role}</p>
         <p>Admin: {this.admin()}</p>
-        <button><Link to='/editmyaccount'>Edit Account</Link></button>
-        <button><Link to='/deletemyaccount'>Delete Account</Link></button>
+        <Button variant="contained"><Link to='/editmyaccount'>Edit Account</Link></Button>
+        <br/>
+        <Button variant="contained" color="secondary"><Link to='/deletemyaccount'><Delete/>Delete Account</Link></Button>
         </> 
         : <></>
     }

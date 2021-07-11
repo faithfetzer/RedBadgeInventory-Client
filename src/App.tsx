@@ -2,9 +2,9 @@ import React from 'react';
 import './App.css';
 import Footer from './site/Footer';
 import Header from './site/Header';
-import Display from './site/Display';
 import Auth from './components/auth/Auth';
 import Sidebar from './site/Sidebar'
+import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles'
 
 type AppState = {
   sessionToken: string,
@@ -13,8 +13,21 @@ type AppState = {
   currentUserId: number | undefined
 }
 
-class App extends React.Component<{}, AppState>{
-  constructor(props: {}){
+const styles = () => createStyles({
+  mainDiv: {
+    minHeight: '100vh',
+    backgroundColor: '#86BBD8',
+    color: '#011627',
+    // '& Button' :{
+    //   backgroundColor: '#CCD7C5',
+    // },
+  }
+});
+
+interface Props extends WithStyles<typeof styles>{ }
+
+class App extends React.Component<Props, AppState>{
+  constructor(props: Props){
     super(props)
     this.state = {
       sessionToken: '',
@@ -35,9 +48,18 @@ class App extends React.Component<{}, AppState>{
 
   checkLocalStorage(){
     let localToken= localStorage.getItem('token')
+    let localUser: any= localStorage.getItem('role')
+    let localAdminStatus: any= localStorage.getItem('admin')
+    if(localAdminStatus === 'true'){
+      localAdminStatus = true
+    } else{
+      localAdminStatus = false
+    }
     if(localToken){
         this.setState({
             sessionToken: localToken,
+            userRole: localUser,
+            adminStatus: localAdminStatus
         })
     }
   }
@@ -90,13 +112,16 @@ class App extends React.Component<{}, AppState>{
   }
 
   render(){
+    const {classes} = this.props
     return (
       <div className="App">
+        <div className={classes.mainDiv}>
           {this.protectedView()}
-          <Footer/>
+          <Footer />
+      </div>
       </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

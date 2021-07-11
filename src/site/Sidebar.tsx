@@ -14,13 +14,8 @@ import ViewLocation from '../components/makerLinks/locations/ViewLocations'
 import AddLocation from '../components/makerLinks/locations/AddLocation'
 import ViewUserInfo from '../components/adminLinks/ViewUserInfo'
 import DeleteAccount from '../components/manageAccount/DeleteAccount';
-import EditItem from '../components/makerLinks/items/EditItem'
-import EditUserInfo from '../components/adminLinks/EditUserInfo';
-import DeleteItem from '../components/makerLinks/items/DeleteItem';
-import EditLocation from '../components/makerLinks/locations/EditLocation';
-import DeleteLocation from '../components/makerLinks/locations/DeleteLocation';
-import DeleteUser from '../components/adminLinks/DeleteUser';
-import MakeUserAdmin from '../components/adminLinks/MakeUserAdmin'
+import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles'
+
 
 type SidebarProps = {
     sessionToken: string,
@@ -86,13 +81,13 @@ class Sidebar extends React.Component<SidebarProps, {}>{
 
                         <Route exact path='/productfeed'><ProductFeed sessionToken={this.props.sessionToken} /></Route>
 
-                        <Route exact path='/myitems'><ViewItem sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/myitems'><ViewItem sessionToken={this.props.sessionToken} currentUserId={this.props.currentUserId}/></Route>
                         {/* <Route exact path='/editmyitems/'><EditItem sessionToken={this.props.sessionToken}/></Route> */}
-                        <Route exact path='/addmyitems'><AddItem sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/addmyitems'><AddItem sessionToken={this.props.sessionToken} currentUserId={this.props.currentUserId}/></Route>
                         {/* <Route exact path='/deletemyitems/'><DeleteItem sessionToken={this.props.sessionToken}/></Route> */}
 
-                        <Route exact path='/mylocations'><ViewLocation sessionToken={this.props.sessionToken}/></Route>
-                        <Route exact path='/addmylocations'><AddLocation sessionToken={this.props.sessionToken}/></Route>
+                        <Route exact path='/mylocations'><ViewLocation sessionToken={this.props.sessionToken} currentUserId={this.props.currentUserId}/></Route>
+                        <Route exact path='/addmylocations'><AddLocation sessionToken={this.props.sessionToken}currentUserId={this.props.currentUserId}/></Route>
                         {/* <Route exact path='/editmylocation/'><EditLocation sessionToken={this.props.sessionToken}/></Route> */}
                         {/* <Route exact path='/deletemylocation/'><DeleteLocation sessionToken={this.props.sessionToken}/></Route> */}
 

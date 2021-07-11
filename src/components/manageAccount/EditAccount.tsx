@@ -7,6 +7,7 @@ import {
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { UserInfo } from '../../Interfaces';
+import {Button} from '@material-ui/core'
 
 type EditAccountProps = {
     sessionToken: string,
@@ -28,7 +29,7 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
         super(props)
         this.state ={
             user: {
-                    id: undefined,
+                    id: this.props.currentUserId,
                     firstName: "",
                     lastName: "",
                     email: "",
@@ -140,7 +141,7 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
                     <br/>
                     ({this.state.user.firstName})
                     <br />
-                    <input type="text" name='firstName' id="firstName" placeholder={this.state.user.firstName} onChange={this.handleChange}></input>
+                    <input type="text" name='firstName' id="firstName" placeholder={this.state.user.firstName} value={this.state.newUser.firstName}onChange={this.handleChange}></input>
                     <br />
                     <label htmlFor='lastName'>Last Name</label>
                     <br/>
@@ -165,7 +166,7 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
                     <input type="email" id='email' name='email' placeholder={this.state.user.email} onChange={this.handleChange}></input>
                     <br />
                     <br/>
-                    <button type='submit'>Save Changes</button>
+                    <Button variant="contained" type='submit'>Save Changes</Button>
                 </form>
             </div>
         )

@@ -9,29 +9,17 @@ import APIURL from '../../../helpers/environment'
 import { ItemInfo } from '../../../Interfaces'
 import EditItem from '../items/EditItem'
 import DeleteItem from '../items/DeleteItem'
+import {Button} from '@material-ui/core'
+import {Delete, Clear} from '@material-ui/icons'
 
 type ViewItemProps = {
     sessionToken: string,
+    currentUserId: number | undefined,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
 }
 
 type ViewItemState = {
@@ -50,6 +38,9 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
             deleteItemView: false,
             itemToChange: null
         }
+        this.setItemToChange = this.setItemToChange.bind(this)
+        this.changeDeleteView = this.changeDeleteView.bind(this)
+        this.changeEditView =this.changeEditView.bind(this)
     }
 
     fetchMyItems() {
@@ -93,9 +84,8 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
                             <td>{items.category}</td>
                             <td>${items.price}</td>
                             <td>{quantityAvailable}</td>
-                            <td>{items.maker_id}</td>
-                            <td><button onClick={this.changeEditView}>Edit</button></td>
-                            <td><button onClick={this.changeDeleteView}>Delete</button></td>
+                            <td><Button variant="contained" onClick={() => {this.changeEditView(); this.setItemToChange(items.id)}}>Edit</Button></td>
+                            <td><Button variant="contained" color="secondary" onClick={this.changeDeleteView}><Delete/></Button></td>
                         </tr>
                         
                     </>
@@ -127,8 +117,8 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     editItemView(){
         return(
             <div>
-                <button onClick={this.changeEditView}>Cancel</button>
-                <EditItem sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setItemToChange={this.setItemToChange}/>
+                <Button variant="contained" onClick={this.changeEditView}><Clear/></Button>
+                <EditItem sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems}/>
             </div>
         )
     }
@@ -136,8 +126,8 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     deleteItemView(){
         return(
             <div>
-                <button onClick={this.changeDeleteView}>Cancel</button>
-                <DeleteItem sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setItemToChange={this.setItemToChange}/>
+                <Button variant="contained" onClick={this.changeDeleteView}><Clear/></Button>
+                <DeleteItem sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems}/>
             </div>
         )
     }
@@ -150,9 +140,10 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
         } else {
             return (
                 <>
-                    <button><Link to='/addmyitems'>Add Items</Link></button>
+                    <Button variant="contained"><Link to='/addmyitems'>Add Items</Link></Button>
                     <table>
                         <thead>
+                            <h2>My Inventory</h2>
                             <tr>
                                 <th>Item Name</th>
                                 <th>Item Description</th>

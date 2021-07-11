@@ -8,9 +8,14 @@ import {
 import React from 'react'
 import {ItemInfo} from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
+import {Button} from '@material-ui/core'
+import {Delete, Clear} from '@material-ui/icons'
+
+// DELETE /items/delete/:id
 
 type DeleteItemProps = {
     sessionToken: string,
+    itemToChange: number | null
     // id: number | undefined,
     // item: ItemInfo
     // adminStatus: boolean,
@@ -18,6 +23,7 @@ type DeleteItemProps = {
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
+    fetchItems: () => void,
     changeDeleteView: () => void,
     setItemToChange: (id: number | null) => void
 }
@@ -31,8 +37,7 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
         super(props)
         this.state= {
             item: {
-                id: undefined,
-                maker_id : undefined,
+                id: 0,
                 name : "",
                 description : "",
                 volume: undefined,
@@ -47,9 +52,17 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
                 available : false,
                 price :  undefined,
                 totalQuantity : 0,
-                location_id : undefined,
                 quantityListed : undefined,
-                quantitySold: 0
+                quantitySold: 0,
+                userId: undefined,
+                locationId: null,
+                user: {id: undefined,
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    password: "",
+                    admin: null,
+                    role: ""}
             }
         }
         this.handleSubmit = this.handleSubmit.bind(this)

@@ -6,6 +6,8 @@ import {
     } from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
+import {Button} from '@material-ui/core'
+import {Delete} from '@material-ui/icons'
 
 type DeleteAccountProps = {
     sessionToken: string,
@@ -82,7 +84,7 @@ class DeleteAccount extends React.Component<DeleteAccountProps, DeleteAccountSta
                 <br/>
                 <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
                 <br/>
-                <button type="submit">Delete Account</button>
+                <Button variant="contained" color="secondary" type="submit"><Delete/>Delete Account</Button>
             </form>
         </div>
     )}

@@ -7,9 +7,13 @@ import {
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
+import {Button} from '@material-ui/core'
+
+// POST /locations/add const { name, url, address, notes } = req.body
 
 type AddLocationProps = {
     sessionToken: string,
+    currentUserId: number | undefined,
     // adminStatus: boolean,
     // productFeedView: boolean,
     // myAccountView: boolean,
@@ -42,11 +46,11 @@ class AddLocation extends React.Component<AddLocationProps, AddLocationState>{
         this.state= {
             location:{
                 id: undefined,
-                maker_id: undefined,
                 name: "",
                 url: "",
                 address: "",
-                notes: ""
+                notes: "",
+                userId: undefined
             }
         }
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -115,7 +119,7 @@ class AddLocation extends React.Component<AddLocationProps, AddLocationState>{
                 <br/>
                 <input type="string" id='notes' name='notes' value={this.state.location.notes} onChange={this.handleChange}></input>
                 <br/>
-                <button type="submit">Submit</button>
+                <Button variant="contained" type="submit">Submit</Button>
             </form>
         </div>
     )}
