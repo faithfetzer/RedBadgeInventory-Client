@@ -9,10 +9,12 @@ import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
 import EditLocation from './EditLocation'
 import DeleteLocation from './DeleteLocation'
-import {Button} from '@material-ui/core'
-import {Delete, Clear} from '@material-ui/icons'
+import { Button } from '@material-ui/core'
+import { Delete, Clear } from '@material-ui/icons'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type ViewLocationProps = {
+
+interface ViewLocationProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined,
     // adminStatus: boolean,
@@ -29,6 +31,9 @@ type ViewLocationState = {
     locationToChange: number | null
 }
 
+const styles = () => createStyles({
+})
+
 class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>{
     constructor(props: ViewLocationProps) {
         super(props)
@@ -40,7 +45,7 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
         }
     }
 
-    fetchMyItems() {
+    fetchMyLocations() {
         let url = `${APIURL}/locations/`
         fetch(url, {
             method: 'GET',
@@ -60,7 +65,7 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
     }
 
     componentDidMount() {
-        this.fetchMyItems()
+        this.fetchMyLocations()
     }
 
     mapProducts() {
@@ -73,8 +78,8 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
                             <td>{locations.url}</td>
                             <td>{locations.address}</td>
                             <td>{locations.notes}</td>
-                            <td><Button variant="contained" onClick={this.changeEditView}>Edit</Button></td>
-                            <td><Button variant="contained" color="secondary" onClick={this.changeDeleteView}><Delete/>Delete</Button></td>
+                            <td><Button variant="contained" onClick={() => { this.changeEditView(); this.setLocationToChange(locations.id) }}>Edit</Button></td>
+                            <td><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setLocationToChange(locations.id) }}><Delete />Delete</Button></td>
                         </tr>
                     </>
                 )
@@ -84,76 +89,79 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
         }
     }
 
-    setLocationToChange(id: number | null){
+    setLocationToChange(id: number | null) {
         this.setState({
             locationToChange: id
         })
     }
 
-    changeEditView = () =>{
+    changeEditView = () => {
         this.setState({
             editLocationView: !this.state.editLocationView
         })
     }
 
-    changeDeleteView =() => {
+    changeDeleteView = () => {
         this.setState({
             deleteLocationView: !this.state.deleteLocationView
         })
     }
 
-    editLocationView(){
-        return(
+    editLocationView() {
+        return (
             <div>
-                <Button variant="contained" onClick={this.changeEditView}><Clear/>Cancel</Button>
-                <EditLocation sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange}/>
+                <Button variant="contained" onClick={this.changeEditView}><Clear />Cancel</Button>
+                <EditLocation sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
             </div>
         )
     }
 
-    deleteLocationView(){
-        return(
+    deleteLocationView() {
+        return (
             <div>
-                <Button variant="contained" onClick={this.changeDeleteView}><Clear/>Cancel</Button>
-                <DeleteLocation currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange}/>
+                <Button variant="contained" onClick={this.changeDeleteView}><Clear />Cancel</Button>
+                <DeleteLocation currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
             </div>
         )
     }
 
-    viewController(){
-        if(this.state.editLocationView){
+    viewController() {
+        if (this.state.editLocationView) {
             return <>{this.editLocationView()}</>
-        } else if(this.state.deleteLocationView){
+        } else if (this.state.deleteLocationView) {
             return <>{this.deleteLocationView()}</>
         } else {
-            return(
-            <>
-            <Button variant="contained"><Link to='/addmylocations'>Add a Listing Location</Link></Button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Location Name</th>
-                            <th>URL</th>
-                            <th>Address</th>
-                            <th>Notes</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.mapProducts()}</tbody>
-                </table>
+            return (
+                <>
+                    <Button variant="contained"><Link to='/addmylocations'>Add a Listing Location</Link></Button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Location Name</th>
+                                <th>URL</th>
+                                <th>Address</th>
+                                <th>Notes</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>{this.mapProducts()}</tbody>
+                    </table>
                 </>
             )
         }
     }
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
+                <h2>Listing Locations</h2>
                 {this.viewController()}
             </div>
         )
     }
 };
 
-export default ViewLocation
+export default withStyles(styles)(ViewLocation)

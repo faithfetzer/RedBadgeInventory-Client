@@ -8,8 +8,10 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import { Input, Form, Label, InputGroup } from 'reactstrap'
 import APIURL from '../../helpers/environment'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type MakeUserAdminProps = {
+
+interface MakeUserAdminProps extends WithStyles<typeof styles> {
     sessionToken: string,
     userEmail: string,
     userAdminStatus: boolean | null,
@@ -24,6 +26,8 @@ type MakeUserAdminProps = {
 type MakeUserAdminState = {
     newAdminStatus: boolean | null
 }
+
+const styles = () => createStyles({})
 
 class MakeUserAdmin extends React.Component<MakeUserAdminProps, MakeUserAdminState>{
     constructor(props: MakeUserAdminProps) {
@@ -76,23 +80,26 @@ class MakeUserAdmin extends React.Component<MakeUserAdminProps, MakeUserAdminSta
                 console.log(err)
             })
     }
-    
+
     render() {
+        const { classes } = this.props
+
         return (
             <div>
                 <Form>
-                    <h3>Admin Status</h3>
+                    <h2>Admin Status</h2>
                     <InputGroup id="adminStatus">
                         <Label htmlFor='true'>True</Label>
                         <Input value="true" id="true" type='radio' label="True" onChange={this.handleChange} />
                         <Label htmlFor='false'>False</Label>
                         <Input value="false" id="false" type='radio' label="False" onChange={this.handleChange} />
-                        <Button onClick={this.handleSubmit}>Update Admin Status</Button>
+                        <br />
+                        <Button variant="contained" onClick={this.handleSubmit}>Save</Button>
                     </InputGroup>
                 </Form>
             </div>
-                )
+        )
     }
 };
 
-export default MakeUserAdmin;
+export default withStyles(styles)(MakeUserAdmin);

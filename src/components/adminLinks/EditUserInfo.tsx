@@ -10,8 +10,10 @@ import APIURL from '../../helpers/environment'
 import MakeUserAdmin from './MakeUserAdmin'
 import { Check, Clear, Delete } from '@material-ui/icons'
 import { Button } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type EditUserInfoProps = {
+
+interface EditUserInfoProps extends WithStyles<typeof styles> {
     sessionToken: string,
     userEmail: string,
     userID: number | undefined
@@ -28,6 +30,8 @@ type EditUserInfoState = {
     newUserInfo: UserInfo,
     updateAdminStatus: boolean
 }
+
+const styles = () => createStyles({})
 
 class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>{
     constructor(props: EditUserInfoProps) {
@@ -64,6 +68,7 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
         this.setState({
             ...this.state,
             newUserInfo: {
+                ...this.state.newUserInfo,
                 [e.target.name]: e.target.value
             } as any
         }, () => console.log(this.state.newUserInfo))
@@ -92,12 +97,12 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
             .then((response) => response.json())
             .then((response) => {
                 this.fetchAccount()
-                this.success()
+                // this.success()
                 console.log(response)
             })
             .catch(err => {
                 console.log(err)
-                this.failure(err)
+                // this.failure(err)
             })
     }
 
@@ -144,7 +149,7 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
     }
 
     button() {
-        return this.state.updateAdminStatus ? <><Clear/>'Cancel'</> : 'Update User Admin Access'
+        return this.state.updateAdminStatus ? <><Clear /></> : 'Update User Admin Access'
     }
     adminStatusToggle() {
         this.setState({
@@ -153,7 +158,7 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
     }
 
     adminStatus() {
-        return this.state.updateAdminStatus ? <><MakeUserAdmin userAdminStatus={this.state.userToEdit.admin} sessionToken={this.props.sessionToken} userEmail={this.state.userToEdit.email} fetchAccount={this.fetchAccount}/></> : <></>
+        return this.state.updateAdminStatus ? <><MakeUserAdmin userAdminStatus={this.state.userToEdit.admin} sessionToken={this.props.sessionToken} userEmail={this.state.userToEdit.email} fetchAccount={this.fetchAccount} /></> : <></>
     }
 
     componentDidMount() {
@@ -161,9 +166,11 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
     }
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
-                <h3>Edit User's Account Infomation</h3>
+                <h2>Edit User's Account Infomation</h2>
                 <p>(current information)</p>
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor='firstName'>First Name</label>
@@ -197,12 +204,13 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
                     <br />
                     <Button variant="contained" type='submit'>Save Changes</Button>
                 </form>
+                <Button variant="contained" size="small" onClick={this.adminStatusToggle}>{this.button()}</Button>
                 {this.adminStatus()}
-                <Button onClick={this.adminStatusToggle}>{this.button()}</Button>
-                
+
+
             </div >
         )
     }
 };
 
-export default EditUserInfo
+export default withStyles(styles)(EditUserInfo)

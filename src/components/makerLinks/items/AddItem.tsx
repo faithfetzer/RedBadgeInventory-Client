@@ -8,10 +8,12 @@ import React from 'react'
 import { ItemInfo } from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
 import { Button } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
+
 
 // POST /items/add const {         name,          description,         volume,         volumeUnit,         weight,         weightUnit,         height,         width,         depth,         lengthUnit,         category,         available,         price,         totalQuantity,         location,         quantityListed,         quantitySold     } = req.body
 
-type AddItemProps = {
+interface AddItemProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined,
     // adminStatus: boolean,
@@ -24,6 +26,8 @@ type AddItemProps = {
 type AddItemState = {
     item: ItemInfo
 }
+
+const styles = () => createStyles({})
 
 class AddItem extends React.Component<AddItemProps, AddItemState>{
     constructor(props: AddItemProps) {
@@ -44,18 +48,21 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
                 category: "",
                 available: false,
                 price: undefined,
+                location: "",
                 totalQuantity: 0,
                 quantityListed: undefined,
                 quantitySold: 0,
                 userId: this.props.currentUserId,
                 locationId: null,
-                user: {id: undefined,
+                user: {
+                    id: undefined,
                     firstName: "",
                     lastName: "",
                     email: "",
                     password: "",
                     admin: null,
-                    role: ""}
+                    role: ""
+                }
             }
         }
         this.handleChange = this.handleChange.bind(this)
@@ -92,12 +99,12 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
             available: this.state.item.available,
             price: this.state.item.price,
             totalQuantity: this.state.item.totalQuantity,
-            // location: this.state.item.location,
+            location: this.state.item.location,
             quantityListed: this.state.item.quantityListed,
             quantitySold: this.state.item.quantitySold
         }
 
-        // console.log('submit', reqBody)
+        console.log('submit', reqBody)
 
         fetch(url, {
             method: 'POST',
@@ -115,9 +122,11 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
     }
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
-                <p>Add Item</p>
+                <h2>Add Item</h2>
                 <form>
                     <label htmlFor='name'>Item Name</label>
                     <br />
@@ -169,7 +178,7 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
                     <br />
                     <label htmlFor='location'>Location</label>
                     <br />
-                    {/* <input type="number" id='location' name='location' value={this.state.item.location} onChange={this.handleChange}></input> */}
+                    <input type="text" id='location' name='location' value={this.state.item.location} onChange={this.handleChange}></input>
                     <br />
                     <label htmlFor='quantityListed'>Quantity Listed</label>
                     <br />
@@ -186,4 +195,4 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
     }
 };
 
-export default AddItem
+export default withStyles(styles)(AddItem)

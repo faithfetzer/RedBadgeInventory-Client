@@ -1,15 +1,16 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
-import {Button} from '@material-ui/core'
-import {Delete} from '@material-ui/icons'
+import { Button } from '@material-ui/core'
+import { Delete } from '@material-ui/icons'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type DeleteAccountProps = {
+interface DeleteAccountProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined,
     adminStatus: boolean | null,
@@ -22,13 +23,17 @@ type DeleteAccountProps = {
 type DeleteAccountState = {
     emailEntered: string
 }
+
+const styles = () => createStyles({
+})
+
 class DeleteAccount extends React.Component<DeleteAccountProps, DeleteAccountState>{
-    constructor(props: DeleteAccountProps){
+    constructor(props: DeleteAccountProps) {
         super(props)
-        this.state ={
+        this.state = {
             emailEntered: ''
         }
-        this.handleDelete =this.handleDelete.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
@@ -38,18 +43,18 @@ class DeleteAccount extends React.Component<DeleteAccountProps, DeleteAccountSta
         })
     }
 
-    handleDelete(e: any){
+    handleDelete(e: any) {
         e.preventDefault()
         // console.log('submit')
         let url = `${APIURL}/user/delete/${this.props.currentUserId}`
-        let reqBody = {email: this.state.emailEntered}
+        let reqBody = { email: this.state.emailEntered }
         console.log(reqBody, url)
-        fetch(url,{
+        fetch(url, {
             method: 'DELETE',
             body: JSON.stringify(reqBody),
             headers: new Headers({
-                'Content-type' : 'application/json',
-                'Authorization' : this.props.sessionToken
+                'Content-type': 'application/json',
+                'Authorization': this.props.sessionToken
             })
         })
             .then(response => response.json())
@@ -64,30 +69,33 @@ class DeleteAccount extends React.Component<DeleteAccountProps, DeleteAccountSta
             })
     }
 
-    success(){
+    success() {
         alert("account deleted")
     }
 
-    failure(error: string){
+    failure(error: string) {
         alert(`error: unable to update account ${error}`)
     }
 
-    render(){
-    return(
-        <div>
-            <p>Delete Your Account</p>
-            <Link to='/viewmyaccount'>Cancel</Link>
-            <br/>
-            <strong>THIS IS PERMANENT AND CANNOT BE UNDONE</strong>
-            <form onSubmit={this.handleDelete}>
-                <label htmlFor='email'>Enter Your Email To Confirm</label>
-                <br/>
-                <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
-                <br/>
-                <Button variant="contained" color="secondary" type="submit"><Delete/>Delete Account</Button>
-            </form>
-        </div>
-    )}
+    render() {
+        const { classes } = this.props
+
+        return (
+            <div>
+                <h2>Delete Your Account</h2>
+                <Link to='/viewmyaccount'>Cancel</Link>
+                <br />
+                <strong>THIS IS PERMANENT AND CANNOT BE UNDONE</strong>
+                <form onSubmit={this.handleDelete}>
+                    <label htmlFor='email'>Enter Your Email To Confirm</label>
+                    <br />
+                    <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
+                    <br />
+                    <Button variant="contained" color="secondary" type="submit"><Delete />Delete Account</Button>
+                </form>
+            </div>
+        )
+    }
 };
 
-export default DeleteAccount
+export default withStyles(styles)(DeleteAccount)

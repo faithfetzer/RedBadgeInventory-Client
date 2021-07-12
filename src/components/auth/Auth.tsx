@@ -1,8 +1,8 @@
 import React from "react";
 import { ThisExpression, ThisTypeNode, transpileModule } from "typescript";
-import {UserInfo} from '../../Interfaces';
+import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
-import {Button} from '@material-ui/core'
+import { Button } from '@material-ui/core'
 
 type AuthProps = {
     sessionToken: string,
@@ -11,7 +11,7 @@ type AuthProps = {
     adminStatus: boolean | null,
     updateSessionToken: (newToken: string) => void,
     updateLocalStorage: (newToken: string, role: string, adminStatus: boolean) => void,
-    updateUserInfo: (role: string, admin:boolean, userID: number) => void,
+    updateUserInfo: (role: string, admin: boolean, userID: number) => void,
     clearLocalStorage: () => void
 }
 
@@ -25,7 +25,7 @@ type AuthState = {
 }
 
 class Auth extends React.Component<AuthProps, AuthState>{
-    constructor(props: AuthProps){
+    constructor(props: AuthProps) {
         super(props)
         this.loginToggle = this.loginToggle.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -33,73 +33,77 @@ class Auth extends React.Component<AuthProps, AuthState>{
         this.formFields = this.formFields.bind(this)
     }
 
-    title(): string{
+    title(): string {
         return this.state.login ? 'Log In' : 'Register for a New Account'
     }
 
     button(): string {
-        return this.state.login ?  'Not registered? Sign up for an account' : 'Already have an account? Log in'
+        return this.state.login ? 'Not registered? Sign up for an account' : 'Already have an account? Log in'
     }
 
-    submitButton(): string{
+    submitButton(): string {
         return this.state.login ? 'Login' : 'Register'
     }
 
-    loginToggle(){
+    loginToggle() {
         this.setState({
-            login:  !this.state.login
+            login: !this.state.login
         })
     }
 
-    formFields(){
+    formFields() {
         return !this.state.login ?
             <>
-            <label htmlFor='firstName'>First Name</label>
-            <br/>
-            <input type="text" name='firstName' id="firstName" value={this.state.firstName} onChange={this.handleChange}></input>
-            <br/>
-            <label htmlFor='lastName'>Last Name</label>
-            <br/>
-            <input type="text" name='lastName' id='lastName'value={this.state.lastName} onChange={this.handleChange}></input>
-            <br/>
-            <label htmlFor='role'>Role</label>
-            <br/>
+                <label htmlFor='firstName'>First Name</label>
+                <br />
+                <input type="text" name='firstName' id="firstName" value={this.state.firstName} onChange={this.handleChange}></input>
+                <br />
+                <label htmlFor='lastName'>Last Name</label>
+                <br />
+                <input type="text" name='lastName' id='lastName' value={this.state.lastName} onChange={this.handleChange}></input>
+                <br />
+                <label htmlFor='role'>Role</label>
+                <br />
                 <fieldset id='role'>
                     <label htmlFor='maker'>Maker</label>
-                    <input type="radio" name='role' id='maker' value='maker' onChange={this.handleChange}/>
+                    <input type="radio" name='role' id='maker' value='maker' onChange={this.handleChange} />
                     <label htmlFor='buyer'>Buyer</label>
-                    <input type="radio" name='role' id='buyer' value='buyer' onChange={this.handleChange}/>
+                    <input type="radio" name='role' id='buyer' value='buyer' onChange={this.handleChange} />
                 </fieldset>
-            <br/>
+                <br />
             </> : <></>
     }
 
-    handleChange(e: React.ChangeEvent<HTMLInputElement>){
+    handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({
             ...this.state,
-            [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
-    handleSubmit(e: any){
+    handleSubmit(e: any) {
         e.preventDefault()
         // console.log('submit')
-        let reqBody = this.state.login ? 
-            {email : this.state.email, 
-            password: this.state.password}
-            : {firstName: this.state.firstName, 
-            lastName: this.state.lastName,
-            email: this.state.email,
-            password: this.state.password,
-            role: this.state.role}
+        let reqBody = this.state.login ?
+            {
+                email: this.state.email,
+                password: this.state.password
+            }
+            : {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                password: this.state.password,
+                role: this.state.role
+            }
         let url = this.state.login ? `${APIURL}/user/login` : `${APIURL}/user/register`
 
         // console.log(reqBody, url)
-        fetch(url,{
+        fetch(url, {
             method: 'POST',
             body: JSON.stringify(reqBody),
             headers: new Headers({
-                'Content-type' : 'application/json'
+                'Content-type': 'application/json'
             })
         })
             .then(response => response.json())
@@ -113,30 +117,30 @@ class Auth extends React.Component<AuthProps, AuthState>{
             .catch(err => console.log(err))
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
             login: true,
         })
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
-                <br/>
-                
-                <br/>
+                <br />
+
+                <br />
                 <Button variant="contained" onClick={this.loginToggle}>{this.button()}</Button>
                 <h3>{this.title()}</h3>
                 <form onSubmit={this.handleSubmit}>
                     {this.formFields()}
                     <label htmlFor='email'>Email</label>
-                    <br/>
+                    <br />
                     <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
-                    <br/>
+                    <br />
                     <label htmlFor='password'>Password</label>
-                    <br/>
+                    <br />
                     <input type="text" id='password' name='password' value={this.state.password} onChange={this.handleChange}></input>
-                    <br/>
+                    <br />
                     <Button variant="contained" type='submit'>{this.submitButton()}</Button>
                 </form>
             </div>

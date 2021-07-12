@@ -7,15 +7,18 @@ import {
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { ItemInfo } from '../../Interfaces'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
-type ProductProps = {
+interface ProductProps extends WithStyles<typeof styles> {
     sessionToken: string,
 }
 
 type ProductState = {
     products: ItemInfo[]
 }
+const styles = () => createStyles({
+})
 
 class ProductFeed extends React.Component<ProductProps, ProductState>{
     constructor(props: ProductProps) {
@@ -39,8 +42,8 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
             .then((response) => {
                 console.log('response', response);
                 this.setState({
-                    ...this.state,
-                    products: [response.availableItems]
+                    // ...this.state,
+                    products: response.availableItems
                 }, () => console.log(this.state.products))
             })
             .catch(err => console.log(err))
@@ -56,13 +59,12 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
             // let productMap = JSON.stringify(this.state.products)
             // console.log(productMap)
             return this.state.products.map((items, index) => {
-                // let quantityAvailable = items.totalQuantity - items.quantitySold
-                // if (quantityAvailable > 0) {
-                    console.log('mapinfo', [items].length)
+                let quantityAvailable = items.totalQuantity - items.quantitySold
+                if (quantityAvailable > 0) {
+                    console.log('mapinfo', [items])
                     return (
-                        <>{JSON.stringify(items)}
+                        <>
                             <tr key={index}>
-                                <td>{items.name}</td>
                                 <td>{items.name}</td>
                                 <td>{items.description}</td>
                                 <td>{items.volume}{items.volumeUnit}</td>
@@ -73,23 +75,25 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                                 <td>{items.lengthUnit}</td>
                                 <td>{items.category}</td>
                                 <td>${items.price}</td>
-                                {/* <td>{quantityAvailable}</td> */}
-                                {/* <td>{items.user.email}</td> */}
+                                <td>{quantityAvailable}</td>
+                                <td>{items.user.email}</td>
                             </tr>
                         </>
                     )
-                // }
+                }
             })
         } else {
-            return <><tr><td colSpan={12}>No Items Available</td></tr></>
+            return <><tr><td colSpan={14}>No Items Available</td></tr></>
         }
     }
 
-    
+
 
     render() {
+        const { classes } = this.props
         return (
             <div>
+                <h2>Products Available</h2>
                 <table>
                     <thead>
                         <tr>
@@ -114,4 +118,4 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
     }
 };
 
-export default ProductFeed
+export default withStyles(styles)(ProductFeed)

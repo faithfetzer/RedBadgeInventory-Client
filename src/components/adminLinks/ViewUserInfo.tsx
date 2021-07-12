@@ -12,8 +12,10 @@ import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
 import EditUserInfo from './EditUserInfo'
 import DeleteUser from './DeleteUser'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type ViewUserInfoProps = {
+
+interface ViewUserInfoProps extends WithStyles<typeof styles> {
     sessionToken: string,
     // adminStatus: boolean,
     // userRole: string,
@@ -29,6 +31,22 @@ type ViewUserInfoState = {
     openDelete: boolean,
     responseStatus: number | undefined
 }
+
+const styles = () => createStyles({
+    sidebarListStyling: {
+        minHeight: '100vh',
+        // backgroundColor: '#CCD7C5',
+        // color: '#011627',
+        // '& Link' :{
+        //     textDecoration: 'none',
+        //     color: 'red'
+        //   backgroundColor: '#CCD7C5',
+    },
+    linkStyling: {
+        textDecoration: 'none',
+    }
+
+});
 
 class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>{
     constructor(props: ViewUserInfoProps) {
@@ -72,7 +90,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
         let urlForId = `${APIURL}/user/idadmin`
         let reqBody = { email: this.state.email }
 
-        // console.log(reqBody)
+        console.log(reqBody)
         fetch(urlForId, {
             method: 'POST',
             body: JSON.stringify(reqBody),
@@ -81,28 +99,28 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
                 'Authorization': this.props.sessionToken
             })
         })
-            .then(async response => {
-                response.json()
-                if (!response.ok) {
-                    this.setState({
-                        responseStatus: response.status
-                    }, () => console.log(this.state.responseStatus))
-                }
-                else {
-                    console.log('response', response)
-                    // this.setState({
-                    //     ...this.state,
-                    //     userInfo: {
-                    //         id: response.user.id,
-                    //         firstName: response.user.firstName,
-                    //         lastName: response.user.lastName,
-                    //         email: response.user.email,
-                    //         password: response.user.password,
-                    //         admin: response.user.admin,
-                    //         role: response.user.role,
-                    //     }
-                    // })
-                }
+            .then(response => response.json())
+            // if (!response.ok) {
+            //     this.setState({
+            //         responseStatus: response.status
+            //     }, () => console.log(this.state.responseStatus))
+            // }
+            // else{
+            // }
+            .then((response) => {
+                console.log('response', response)
+                this.setState({
+                    ...this.state,
+                    userInfo: {
+                        id: response.user.id,
+                        firstName: response.user.firstName,
+                        lastName: response.user.lastName,
+                        email: response.user.email,
+                        password: response.user.password,
+                        admin: response.user.admin,
+                        role: response.user.role,
+                    }
+                })
             })
             .catch(err => console.log(err))
     }
@@ -143,21 +161,23 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
     }
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
                 <Modal isOpen={this.state.openEdit}
                     aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description" className={'modal-dialog-centered'}>
+                    aria-describedby="simple-modal-description" className='modal-dialog-centered'>
                     <ModalHeader>
-                        <Button variant="contained" onClick={this.toggleEdit}><Clear />Cancel</Button></ModalHeader>
+                        <Button variant="contained" onClick={this.toggleEdit}><Clear /></Button></ModalHeader>
                     <ModalBody>
                         <EditUserInfo sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody>
                 </Modal>
                 <Modal isOpen={this.state.openDelete}
                     aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description">
+                    aria-describedby="simple-modal-description" className='modal-dialog-centered'>
                     <ModalHeader>
-                        <Button variant="contained" onClick={this.toggleDelete}><Clear />Cancel</Button></ModalHeader>
+                        <Button variant="contained" onClick={this.toggleDelete}><Clear /></Button></ModalHeader>
                     <ModalBody>
                         <DeleteUser sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody></Modal>
                 <h3>Search for User Info By Email</h3>
@@ -175,4 +195,4 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
     }
 };
 
-export default ViewUserInfo
+export default withStyles(styles)(ViewUserInfo)

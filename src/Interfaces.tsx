@@ -9,7 +9,7 @@ export interface UserInfo {
 }
 
 export interface ItemInfo {
-    id: number,
+    id: number| null,
     name : string,
     description : string,
     volume: number | undefined,
@@ -23,6 +23,7 @@ export interface ItemInfo {
     category: string,
     available : boolean,
     price :  number | undefined,
+    location: string,
     totalQuantity : number,
     quantityListed : number | undefined,
     quantitySold: number,
@@ -38,7 +39,7 @@ export interface ItemInfo {
 }
 
 export interface LocationInfo {
-    id: number | undefined,
+    id: number | null,
     name: string,
     url: string,
     address: string,

@@ -9,10 +9,12 @@ import APIURL from '../../../helpers/environment'
 import { ItemInfo } from '../../../Interfaces'
 import EditItem from '../items/EditItem'
 import DeleteItem from '../items/DeleteItem'
-import {Button} from '@material-ui/core'
-import {Delete, Clear} from '@material-ui/icons'
+import { Button } from '@material-ui/core'
+import { Delete, Clear } from '@material-ui/icons'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type ViewItemProps = {
+
+interface ViewItemProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined,
     // adminStatus: boolean,
@@ -29,6 +31,9 @@ type ViewItemState = {
     itemToChange: number | null
 }
 
+const styles = () => createStyles({
+})
+
 class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     constructor(props: ViewItemProps) {
         super(props)
@@ -40,7 +45,7 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
         }
         this.setItemToChange = this.setItemToChange.bind(this)
         this.changeDeleteView = this.changeDeleteView.bind(this)
-        this.changeEditView =this.changeEditView.bind(this)
+        this.changeEditView = this.changeEditView.bind(this)
     }
 
     fetchMyItems() {
@@ -50,6 +55,7 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
             headers: new Headers({
                 'Content-type': 'application/json',
                 'Authorization': this.props.sessionToken
+                // 'Authorization': localStorage.getItem('token')
             })
         })
             .then(response => response.json())
@@ -67,7 +73,7 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     }
 
     mapProducts() {
-        if (this.state.myProducts.length > 0) {
+        if (this.state.myProducts) {
             return this.state.myProducts.map((items, index) => {
                 let quantityAvailable = items.totalQuantity - items.quantitySold
                 return (
@@ -84,58 +90,60 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
                             <td>{items.category}</td>
                             <td>${items.price}</td>
                             <td>{quantityAvailable}</td>
-                            <td><Button variant="contained" onClick={() => {this.changeEditView(); this.setItemToChange(items.id)}}>Edit</Button></td>
-                            <td><Button variant="contained" color="secondary" onClick={this.changeDeleteView}><Delete/></Button></td>
+                            <td>{items.quantityListed}</td>
+                            <td>{items.quantitySold}</td>
+                            <td><Button variant="contained" onClick={() => { this.changeEditView(); this.setItemToChange(items.id) }}>Edit</Button></td>
+                            <td><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setItemToChange(items.id) }}><Delete /></Button></td>
                         </tr>
-                        
+
                     </>
                 )
             })
         } else {
-            return <><tr><td colSpan={12}>No Items Currently In Inventory. <Link to='/addmyitems'>Add Something!</Link></td></tr></>
+            return <><tr><td colSpan={15}>No Items Currently In Inventory. <Link to='/addmyitems'>Add Something!</Link></td></tr></>
         }
     }
 
-    setItemToChange(id: number | null){
+    setItemToChange(id: number | null) {
         this.setState({
             itemToChange: id
         })
     }
 
-    changeEditView = () =>{
+    changeEditView = () => {
         this.setState({
             editItemView: !this.state.editItemView
         })
     }
 
-    changeDeleteView =() => {
+    changeDeleteView = () => {
         this.setState({
             deleteItemView: !this.state.deleteItemView
         })
     }
 
-    editItemView(){
-        return(
+    editItemView() {
+        return (
             <div>
-                <Button variant="contained" onClick={this.changeEditView}><Clear/></Button>
-                <EditItem sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems}/>
+                <Button variant="contained" onClick={this.changeEditView}><Clear /></Button>
+                <EditItem sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems} />
             </div>
         )
     }
 
-    deleteItemView(){
-        return(
+    deleteItemView() {
+        return (
             <div>
-                <Button variant="contained" onClick={this.changeDeleteView}><Clear/></Button>
-                <DeleteItem sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems}/>
+                <Button variant="contained" onClick={this.changeDeleteView}><Clear /></Button>
+                <DeleteItem sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setItemToChange={this.setItemToChange} itemToChange={this.state.itemToChange} fetchItems={this.fetchMyItems} />
             </div>
         )
     }
 
-    viewController(){
-        if(this.state.editItemView){
+    viewController() {
+        if (this.state.editItemView) {
             return <>{this.editItemView()}</>
-        } else if(this.state.deleteItemView){
+        } else if (this.state.deleteItemView) {
             return <>{this.deleteItemView()}</>
         } else {
             return (
@@ -143,34 +151,39 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
                     <Button variant="contained"><Link to='/addmyitems'>Add Items</Link></Button>
                     <table>
                         <thead>
-                            <h2>My Inventory</h2>
                             <tr>
-                                <th>Item Name</th>
-                                <th>Item Description</th>
+                                <th>Name</th>
+                                <th>Description</th>
                                 <th>Volume</th>
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>Width</th>
                                 <th>Depth</th>
-                                <th>Units</th>
+                                <th>Unit</th>
                                 <th>Category</th>
                                 <th>Price(each)</th>
-                                <th>Quantity Available</th>
-                                <th>Maker Contact</th>
+                                <th># Available</th>
+                                <th># Listed</th>
+                                <th># Sold</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>{this.mapProducts()}</tbody>
                     </table>
                 </>
-    
+
             )
         }
     }
 
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
+                <h2>My Inventory</h2>
                 {this.viewController()}
             </div>
 
@@ -178,4 +191,4 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     }
 };
 
-export default ViewItem
+export default withStyles(styles)(ViewItem)

@@ -1,16 +1,17 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
-import {Button} from '@material-ui/core';
-import {Clear, Delete} from '@material-ui/icons'
+import { Button } from '@material-ui/core';
+import { Clear, Delete } from '@material-ui/icons'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
-type DeleteUserProps = {
+interface DeleteUserProps extends WithStyles<typeof styles> {
     sessionToken: string,
     userEmail: string,
     userID: number | undefined
@@ -20,15 +21,17 @@ type DeleteUserProps = {
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
 }
-type DeleteUserState = {emailEntered: string}
+type DeleteUserState = { emailEntered: string }
+
+const styles = () => createStyles({})
 
 class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
-    constructor(props: DeleteUserProps){
+    constructor(props: DeleteUserProps) {
         super(props)
-        this.state ={
+        this.state = {
             emailEntered: ''
         }
-        this.handleDelete =this.handleDelete.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
@@ -38,19 +41,19 @@ class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
         })
     }
 
-    handleDelete(e: any){
+    handleDelete(e: any) {
         e.preventDefault()
         // console.log('submit')
         let url = `${APIURL}/user/delete/${this.props.userID}`
-        let reqBody = {email: this.state.emailEntered}
+        let reqBody = { email: this.state.emailEntered }
         console.log(reqBody, url)
-        if(this.props.userEmail === this.state.emailEntered){
-            fetch(url,{
+        if (this.props.userEmail === this.state.emailEntered) {
+            fetch(url, {
                 method: 'DELETE',
                 body: JSON.stringify(reqBody),
                 headers: new Headers({
-                    'Content-type' : 'application/json',
-                    'Authorization' : this.props.sessionToken
+                    'Content-type': 'application/json',
+                    'Authorization': this.props.sessionToken
                 })
             })
                 .then(response => response.json())
@@ -61,35 +64,39 @@ class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
                 .catch(err => {
                     console.log(err)
                     this.failure(err)
-                })}
-                else{
-                    alert("Emails do not match")
-                }
+                })
+        }
+        else {
+            alert("Emails do not match")
+        }
     }
 
-    success(){
+    success() {
         alert("account deleted")
     }
 
-    failure(error: string){
+    failure(error: string) {
         alert(`error: unable to update account ${error}`)
     }
-    render(){
-    return(
-        <div>
-            <p>Delete User Account</p>
-            {this.props.userEmail}
-            <br/>
-            <strong>THIS IS PERMANENT AND CANNOT BE UNDONE</strong>
-            <form onSubmit={this.handleDelete}>
-                <label htmlFor='email'>Re-enter Email Address To Confirm</label>
-                <br/>
-                <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
-                <br/>
-                <Button variant="contained" color="secondary" type="submit"><Delete/>Delete Account</Button>
-            </form>
-        </div>
-    )}
+    render() {
+        const { classes } = this.props
+
+        return (
+            <div>
+                <h2>Delete User Account</h2>
+                {this.props.userEmail}
+                <br />
+                <strong>THIS IS PERMANENT AND CANNOT BE UNDONE</strong>
+                <form onSubmit={this.handleDelete}>
+                    <label htmlFor='email'>Re-enter Email Address To Confirm</label>
+                    <br />
+                    <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
+                    <br />
+                    <Button variant="contained" color="secondary" type="submit"><Delete />Delete Account</Button>
+                </form>
+            </div>
+        )
+    }
 };
 
-export default DeleteUser
+export default withStyles(styles)(DeleteUser)
