@@ -1,29 +1,35 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
-import {UserInfo} from '../../Interfaces';
+import { Check, Clear, Delete } from '@material-ui/icons'
+import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
+import { Button, ButtonGroup } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type ViewAccountProps = {
+
+interface ViewAccountProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined
     adminStatus: boolean | null,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
-    updateUserInfo: (role: string, admin:boolean, userID: number) => void
+    updateUserInfo: (role: string, admin: boolean, userID: number) => void
 }
 
 type ViewUserInfoState = {
     userInfo: UserInfo,
 }
+const styles = () => createStyles({
+})
 
 class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
-    constructor(props: ViewAccountProps){
+    constructor(props: ViewAccountProps) {
         super(props)
         this.state = {
             userInfo: {
@@ -38,14 +44,14 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
         }
     }
 
-    fetchAccount(){
+    fetchAccount() {
         let url = `${APIURL}/user/info/${this.props.currentUserId}`
         console.log('fetch account info', url)
-        fetch(url,{
+        fetch(url, {
             method: 'GET',
             headers: new Headers({
-                'Content-type' : 'application/json',
-                'Authorization' : this.props.sessionToken
+                'Content-type': 'application/json',
+                'Authorization': this.props.sessionToken
             })
         })
             .then(response => response.json())
@@ -60,44 +66,51 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
                         email: response.user.email,
                         password: response.user.password,
                         admin: response.user.admin,
-                        role: response.user.role}
+                        role: response.user.role
+                    }
                 }, () => console.log('state', this.state))
             })
             .catch(err => console.log(err))
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchAccount()
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
     }
 
-    admin(){
-        return this.state.userInfo.admin ? 'Yes' : 'No'
+    admin() {
+        return this.state.userInfo.admin ? <Check /> : <Clear />
     }
 
-    userInfoDisplay(){
-        return this.state.userInfo.id !== 0 || undefined  ? 
-        <>
-        <p>First Name: {this.state.userInfo.firstName}</p>
-        <p>Last Name: {this.state.userInfo.lastName}</p>
-        <p>Email: {this.state.userInfo.email}</p>
-        <p>Role: {this.state.userInfo.role}</p>
-        <p>Admin: {this.admin()}</p>
-        <button><Link to='/editmyaccount'>Edit Account</Link></button>
-        <button><Link to='/deletemyaccount'>Delete Account</Link></button>
-        </> 
-        : <></>
+    userInfoDisplay() {
+        return this.state.userInfo.id !== 0 || undefined ?
+            <>
+                <p>First Name: {this.state.userInfo.firstName}</p>
+                <p>Last Name: {this.state.userInfo.lastName}</p>
+                <p>Email: {this.state.userInfo.email}</p>
+                <p>Role: {this.state.userInfo.role}</p>
+                <p>Admin: {this.admin()}</p>
+                <ButtonGroup>
+                    <Button variant="contained" size="small"><Link to='/editmyaccount'>Edit</Link></Button>
+                    <br />
+                    <Button variant="contained" size="small" color="secondary"><Link to='/deletemyaccount'><Delete />Delete</Link></Button>
+                </ButtonGroup>
+            </>
+            : <></>
     }
 
-    render(){
-    return(
-        <div>
-            <p>ViewAccount</p>
-            {this.userInfoDisplay()}
-        </div>
-    )}
+    render() {
+        const { classes } = this.props
+
+        return (
+            <div>
+                <h2>ViewAccount</h2>
+                {this.userInfoDisplay()}
+            </div>
+        )
+    }
 };
 
-export default ViewAccount
+export default withStyles(styles)(ViewAccount)

@@ -1,11 +1,10 @@
-import {Row} from 'reactstrap';
+import { Row } from 'reactstrap';
+import { BottomNavigation } from '@material-ui/core';
 
 const Footer = () => {
-    return(
-        <footer>
-            <Row>
-                <p>&copy; Faith Fetzer 2021, Eleven Fifty Academy</p>
-            </Row>
+    return (
+        <footer style={{ 'position': 'absolute', 'bottom': 5, 'minWidth': '100vw', 'marginTop': 10 }}>
+            <>&copy; Faith Fetzer 2021, Eleven Fifty Academy</>
         </footer>
     )
 }

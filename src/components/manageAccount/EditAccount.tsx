@@ -7,15 +7,18 @@ import {
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { UserInfo } from '../../Interfaces';
+import { Button } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type EditAccountProps = {
+
+interface EditAccountProps extends WithStyles<typeof styles> {
     sessionToken: string,
     currentUserId: number | undefined,
     adminStatus: boolean | null,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
-    updateUserInfo: (role: string, admin:boolean, userID: number) => void,
+    updateUserInfo: (role: string, admin: boolean, userID: number) => void,
 }
 
 type EditAccountState = {
@@ -23,19 +26,22 @@ type EditAccountState = {
     newUser: UserInfo
 }
 
+const styles = () => createStyles({
+})
+
 class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
     constructor(props: EditAccountProps) {
         super(props)
-        this.state ={
+        this.state = {
             user: {
-                    id: undefined,
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    password: "",
-                    admin: null,
-                    role: ""
-                },
+                id: this.props.currentUserId,
+                firstName: "",
+                lastName: "",
+                email: "",
+                password: "",
+                admin: null,
+                role: ""
+            },
             newUser: {
                 id: undefined,
                 firstName: "",
@@ -54,18 +60,20 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
         this.setState({
             ...this.state,
             newUser: {
-            [e.target.name]: e.target.value} as any
-        }, () => console.log(this.state.newUser))
+                ...this.state.newUser,
+                [e.target.name]: e.target.value
+            }
+        } as any, () => console.log(this.state.newUser))
     }
-    
-    fetchAccount(){
+
+    fetchAccount() {
         let url = `${APIURL}/user/info/${this.props.currentUserId}`
         console.log('fetch account info', url)
-        fetch(url,{
+        fetch(url, {
             method: 'GET',
             headers: new Headers({
-                'Content-type' : 'application/json',
-                'Authorization' : this.props.sessionToken
+                'Content-type': 'application/json',
+                'Authorization': this.props.sessionToken
             })
         })
             .then(response => response.json())
@@ -80,7 +88,17 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
                         email: response.user.email,
                         password: response.user.password,
                         admin: response.user.admin,
-                        role: response.user.role}
+                        role: response.user.role
+                    },
+                    newUser: {
+                        id: response.user.id,
+                        firstName: response.user.firstName,
+                        lastName: response.user.lastName,
+                        email: response.user.email,
+                        password: response.user.password,
+                        admin: response.user.admin,
+                        role: response.user.role
+                    }
                 }, () => console.log('state', this.state))
             })
             .catch(err => console.log(err))
@@ -90,11 +108,11 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
         e.preventDefault()
         console.log('submit', this.state.newUser)
         let reqBody = {
-                firstName: this.state.newUser.firstName,
-                lastName: this.state.newUser.lastName,
-                email: this.state.newUser.email,
-                role: this.state.newUser.role
-            }
+            firstName: this.state.newUser.firstName,
+            lastName: this.state.newUser.lastName,
+            email: this.state.newUser.email,
+            role: this.state.newUser.role
+        }
         let url = `${APIURL}/user/update/${this.props.currentUserId}`
 
         console.log(reqBody, url)
@@ -109,47 +127,49 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
             .then((response) => response.json())
             .then((response) => {
                 this.fetchAccount()
-                this.success()
+                // this.success()
                 console.log(response)
             })
             .catch(err => {
                 console.log(err)
-                this.failure(err)
+                // this.failure(err)
             })
     }
 
-    success(){
+    success() {
         alert("account updated")
     }
 
-    failure(error: string){
+    failure(error: string) {
         alert(`error: unable to update account ${error}`)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchAccount()
     }
 
     render() {
+        const { classes } = this.props
+
         return (
             <div>
-                <p>Edit Your Account</p>
+                <h2>Edit Your Account</h2>
                 <Link to='/viewmyaccount'>Cancel</Link>
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor='firstName'>First Name</label>
-                    <br/>
+                    <br />
                     ({this.state.user.firstName})
                     <br />
-                    <input type="text" name='firstName' id="firstName" placeholder={this.state.user.firstName} onChange={this.handleChange}></input>
+                    <input type="text" name='firstName' id="firstName" placeholder={this.state.user.firstName} value={this.state.newUser.firstName} onChange={this.handleChange}></input>
                     <br />
                     <label htmlFor='lastName'>Last Name</label>
-                    <br/>
+                    <br />
                     ({this.state.user.lastName})
                     <br />
-                    <input type="text" name='lastName' id='lastName' placeholder={this.state.user.lastName} onChange={this.handleChange}></input>
+                    <input type="text" name='lastName' id='lastName' placeholder={this.state.user.lastName} value={this.state.newUser.lastName} onChange={this.handleChange}></input>
                     <br />
                     <label htmlFor='role'>Role</label>
-                    <br/>
+                    <br />
                     ({this.state.user.role})
                     <br />
                     <fieldset id='role'>
@@ -159,17 +179,17 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
                         <input type="radio" name='role' id='buyer' value='buyer' onChange={this.handleChange} />
                     </fieldset>
                     <label htmlFor='email'>Email</label>
-                    <br/>
+                    <br />
                     ({this.state.user.email})
                     <br />
-                    <input type="email" id='email' name='email' placeholder={this.state.user.email} onChange={this.handleChange}></input>
+                    <input type="email" id='email' name='email' placeholder={this.state.user.email} value={this.state.newUser.email} onChange={this.handleChange}></input>
                     <br />
-                    <br/>
-                    <button type='submit'>Save Changes</button>
+                    <br />
+                    <Button variant="contained" type='submit'>Save Changes</Button>
                 </form>
             </div>
         )
     }
 };
 
-export default EditAccount
+export default withStyles(styles)(EditAccount)

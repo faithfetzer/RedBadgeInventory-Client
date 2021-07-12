@@ -9,8 +9,7 @@ export interface UserInfo {
 }
 
 export interface ItemInfo {
-    id: number | undefined,
-    maker_id : number | undefined,
+    id: number| null,
     name : string,
     description : string,
     volume: number | undefined,
@@ -24,17 +23,26 @@ export interface ItemInfo {
     category: string,
     available : boolean,
     price :  number | undefined,
+    location: string,
     totalQuantity : number,
-    location_id : number | undefined,
     quantityListed : number | undefined,
-    quantitySold: number
+    quantitySold: number,
+    userId: number | undefined,
+    locationId: number | null,
+    user: {id: number | undefined,
+        firstName: string,
+        lastName: string,
+        email: string,
+        password: string,
+        admin: boolean | null,
+        role: string}
 }
 
 export interface LocationInfo {
-    id: number | undefined,
-    maker_id: number | undefined,
+    id: number | null,
     name: string,
     url: string,
     address: string,
-    notes: string
+    notes: string,
+    userId: number | undefined
 }
