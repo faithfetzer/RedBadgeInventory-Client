@@ -1,124 +1,121 @@
 import {
     BrowserRouter as Router,
     Switch,
-    Link, 
+    Link,
     Route
-    } from 'react-router-dom';
+} from 'react-router-dom';
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
+import { Button } from '@material-ui/core'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type AddLocationProps = {
+
+// POST /locations/add const { name, url, address, notes } = req.body
+
+interface AddLocationProps extends WithStyles<typeof styles> {
     sessionToken: string,
+    currentUserId: number | undefined,
     // adminStatus: boolean,
-    // productFeedView: boolean,
-    // myAccountView: boolean,
-    // adminAccountManager: boolean,
-    // myItemView: boolean,
-    // myLocationView: boolean,
     // userRole: string,
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
-    // updateMyLocationView: () => void,
-    // updateMyItemView: () => void,
-    // updateMyAccountView: () => void,
-    // updateAdminAccount: () => void,
-    // notProductView: () => void,
-    // productView: () => void,
-    // notMyAccountView: () => void,
-    // notAdminAccount: () => void,
-    // notMyItemView: () => void,
-    // notMyLocationView: () => void
 }
 
-type AddLocationState= {
+type AddLocationState = {
     location: LocationInfo
 }
 
+const styles = () => createStyles({
+})
+
 class AddLocation extends React.Component<AddLocationProps, AddLocationState>{
-    constructor(props: AddLocationProps){
+    constructor(props: AddLocationProps) {
         super(props)
-        this.state= {
-            location:{
-                id: undefined,
-                maker_id: undefined,
+        this.state = {
+            location: {
+                id: null,
                 name: "",
                 url: "",
                 address: "",
-                notes: ""
+                notes: "",
+                userId: undefined
             }
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
-    handleChange(e: React.ChangeEvent<HTMLInputElement>){
+    handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({
             ...this.state,
             location: {
-            [e.target.name] : e.target.value}} as any)
+                ...this.state.location,
+                [e.target.name]: e.target.value
+            }
+        } as any)
 
     }
 
-        
-    handleSubmit(e: any){
-            e.preventDefault()
-            console.log('submit', this.state.location)
-            // let reqBody = this.state.login ? 
-            //     {email : this.state.email, 
-            //     password: this.state.password}
-            //     : {firstName: this.state.firstName, 
-            //     lastName: this.state.lastName,
-            //     email: this.state.email,
-            //     password: this.state.password,
-            //     role: this.state.role}
-            // let url = this.state.login ? `${APIURL}/user/login` : `${APIURL}/user/register`
-    
-            // // console.log(reqBody, url)
-            // fetch(url,{
-            //     method: 'POST',
-            //     body: JSON.stringify(reqBody),
-            //     headers: new Headers({
-            //         'Content-type' : 'application/json'
-            //     })
-            // })
-            //     .then(response => response.json())
-            //     .then((response) => {
-            //         // console.log('response', response);
-            //         this.props.updateSessionToken(response.token);
-            //         this.props.updateLocalStorage(response.token);
-            //         this.props.updateUserInfo(response.user.role, response.user.admin);
-            //         // console.log(this.props.sessionToken);
-            //     })
-            //     .catch(err => console.log(err))
+
+    handleSubmit(e: any) {
+        e.preventDefault()
+        console.log('submit', this.state.location)
+        let reqBody = {
+            name: this.state.location.name,
+            url: this.state.location.url,
+            address: this.state.location.address,
+            notes: this.state.location.notes
         }
 
-    render(){
-    return(
-        <div>
-            <p>Add Location</p>
-            <form onSubmit={this.handleSubmit}>
-                <label htmlFor='name'>Location Name</label>
-                <br/>
-                <input type="string" id='name' name='name' value={this.state.location.name} onChange={this.handleChange}></input>
-                <br/>
-                <label htmlFor='url'>URL</label>
-                <br/>
-                <input type="string" id='url' name='url' value={this.state.location.url} onChange={this.handleChange}></input>
-                <br/>
-                <label htmlFor='address'>Address</label>
-                <br/>
-                <input type="string" id='address' name='address' value={this.state.location.address} onChange={this.handleChange}></input>
-                <br/>
-                <label htmlFor='notes'>Notes</label>
-                <br/>
-                <input type="string" id='notes' name='notes' value={this.state.location.notes} onChange={this.handleChange}></input>
-                <br/>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    )}
+        let url = `${APIURL}/locations/add`
+
+        console.log(reqBody, url)
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(reqBody),
+            headers: new Headers({
+                'Content-type': 'application/json',
+                'Authorization': this.props.sessionToken
+            })
+        })
+            .then(response => response.json())
+            .then((response) => {
+                console.log('response', response);
+                // console.log(this.props.sessionToken);
+            })
+            .catch(err => console.log(err))
+    }
+
+    render() {
+        const { classes } = this.props
+
+        return (
+            <div>
+                <h2>Add Location</h2>
+                <form onSubmit={this.handleSubmit}>
+                    <label htmlFor='name'>Location Name</label>
+                    <br />
+                    <input type="string" id='name' name='name' value={this.state.location.name} onChange={this.handleChange} required></input>
+                    <br />
+                    <label htmlFor='url'>URL</label>
+                    <br />
+                    <input type="string" id='url' name='url' value={this.state.location.url} onChange={this.handleChange}></input>
+                    <br />
+                    <label htmlFor='address'>Address</label>
+                    <br />
+                    <input type="string" id='address' name='address' value={this.state.location.address} onChange={this.handleChange}></input>
+                    <br />
+                    <label htmlFor='notes'>Notes</label>
+                    <br />
+                    <input type="string" id='notes' name='notes' value={this.state.location.notes} onChange={this.handleChange}></input>
+                    <br />
+                    <Button variant="contained" type="submit">Submit</Button>
+                </form>
+            </div>
+        )
+    }
 };
 
-export default AddLocation
+export default withStyles(styles)(AddLocation)
