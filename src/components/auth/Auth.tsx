@@ -1,10 +1,11 @@
 import React from "react";
-import { ThisExpression, ThisTypeNode, transpileModule } from "typescript";
-import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
 import { Button } from '@material-ui/core'
+import {Redirect} from 'react-router-dom'
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
-type AuthProps = {
+
+interface AuthProps extends WithStyles<typeof styles> {
     sessionToken: string,
     userRole: string,
     currentUserId: number | undefined,
@@ -24,6 +25,27 @@ type AuthState = {
     role: string
 }
 
+const styles = () => createStyles({
+    form: {
+        width: '40%',
+        border: '2px solid ',
+        borderRadius: '15px',
+        '& fieldset' :{
+            border: "none"
+        }, 
+        '& label': {
+            fontWeight: 'bold'
+        },
+        marginRight: '30%',
+        marginLeft: '30%',
+    },
+    mainDiv:{
+        display: "flex-column",
+        color: '#1C448E'
+        // alignContent: 'center'
+    }
+})
+
 class Auth extends React.Component<AuthProps, AuthState>{
     constructor(props: AuthProps) {
         super(props)
@@ -37,8 +59,8 @@ class Auth extends React.Component<AuthProps, AuthState>{
         return this.state.login ? 'Log In' : 'Register for a New Account'
     }
 
-    button(): string {
-        return this.state.login ? 'Not registered? Sign up for an account' : 'Already have an account? Log in'
+    button() {
+        return this.state.login ? <>Not registered?<br/>Sign up for an account</> : <>Already have an account?<br/>Log in</>
     }
 
     submitButton(): string {
@@ -56,11 +78,11 @@ class Auth extends React.Component<AuthProps, AuthState>{
             <>
                 <label htmlFor='firstName'>First Name</label>
                 <br />
-                <input type="text" name='firstName' id="firstName" value={this.state.firstName} onChange={this.handleChange}></input>
+                <input type="text" name='firstName' id="firstName" value={this.state.firstName} onChange={this.handleChange} required></input>
                 <br />
                 <label htmlFor='lastName'>Last Name</label>
                 <br />
-                <input type="text" name='lastName' id='lastName' value={this.state.lastName} onChange={this.handleChange}></input>
+                <input type="text" name='lastName' id='lastName' value={this.state.lastName} onChange={this.handleChange} required></input>
                 <br />
                 <label htmlFor='role'>Role</label>
                 <br />
@@ -124,23 +146,23 @@ class Auth extends React.Component<AuthProps, AuthState>{
     }
 
     render() {
-        return (
-            <div>
-                <br />
+        const { classes } = this.props
 
-                <br />
+        return (
+            <div className={classes.mainDiv}>
                 <Button variant="contained" onClick={this.loginToggle}>{this.button()}</Button>
                 <h3>{this.title()}</h3>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} className={classes.form}>
                     {this.formFields()}
                     <label htmlFor='email'>Email</label>
                     <br />
-                    <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
+                    <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange} required></input>
                     <br />
                     <label htmlFor='password'>Password</label>
                     <br />
-                    <input type="text" id='password' name='password' value={this.state.password} onChange={this.handleChange}></input>
+                    <input type="text" id='password' name='password' value={this.state.password} onChange={this.handleChange}required></input>
                     <br />
+                    <br/>
                     <Button variant="contained" type='submit'>{this.submitButton()}</Button>
                 </form>
             </div>
@@ -148,4 +170,4 @@ class Auth extends React.Component<AuthProps, AuthState>{
     }
 }
 
-export default Auth;
+export default withStyles(styles)(Auth);

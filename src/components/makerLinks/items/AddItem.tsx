@@ -1,9 +1,4 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
+
 import React from 'react'
 import { ItemInfo } from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
@@ -130,7 +125,7 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
                 <form>
                     <label htmlFor='name'>Item Name</label>
                     <br />
-                    <input type="string" id='name' name='name' value={this.state.item.name} onChange={this.handleChange}></input>
+                    <input type="string" id='name' name='name' value={this.state.item.name} onChange={this.handleChange} required></input>
                     <br />
                     <label htmlFor='description'>Description</label>
                     <br />

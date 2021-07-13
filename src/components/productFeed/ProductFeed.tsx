@@ -1,13 +1,9 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { ItemInfo } from '../../Interfaces'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
+import { Email } from '@material-ui/icons'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
 
 
 interface ProductProps extends WithStyles<typeof styles> {
@@ -18,7 +14,61 @@ type ProductState = {
     products: ItemInfo[]
 }
 const styles = () => createStyles({
+    table: {
+        // fontSize: 50,
+        // textAlign: 'center',
+        border: '3px solid #0A2463',
+    },
+    tableHead:{
+        color: '#30011E',
+        backgroundColor: '#FFB7FF',
+        border: 'none'
+    }
 })
+
+const StyledTableRow = withStyles(() =>
+    createStyles({
+        root: {
+            //   '&:nth-of-type(odd)': {
+            // display: 'flex',
+            // backgroundColor: "red",
+            padding: '30px', 
+            margin: '3px',
+            height: 10,
+            textAlign: 'center',
+            // maxWidth: 500
+            //   },
+        },
+    }),
+)(TableRow);
+
+const StyledTable = withStyles(() =>
+    createStyles({
+        root: {
+            backgroundColor: '#CCD7C5',
+            height: 10,
+            // width:'75px',
+            textAlign: 'center',
+        },
+    }),
+)(Table);
+
+const StyledTableCell = withStyles(() =>
+    createStyles({
+        root: {
+            //   '&:nth-of-type(odd)': {
+            // backgroundColor: "blue",
+            textAlign: 'center',
+            padding: '2px', 
+            margin: 0,
+            // height: 10,
+            fontSize: 14,
+            border: '2px solid #0A2463'
+            // maxWidth: 500
+            //   },
+        },
+    }),
+)(TableCell);
 
 class ProductFeed extends React.Component<ProductProps, ProductState>{
     constructor(props: ProductProps) {
@@ -64,26 +114,28 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
                     console.log('mapinfo', [items])
                     return (
                         <>
-                            <tr key={index}>
-                                <td>{items.name}</td>
-                                <td>{items.description}</td>
-                                <td>{items.volume}{items.volumeUnit}</td>
-                                <td>{items.weight}{items.weightUnit}</td>
-                                <td>{items.height}</td>
-                                <td>{items.width}</td>
-                                <td>{items.depth}</td>
-                                <td>{items.lengthUnit}</td>
-                                <td>{items.category}</td>
-                                <td>${items.price}</td>
-                                <td>{quantityAvailable}</td>
-                                <td>{items.user.email}</td>
-                            </tr>
+                            <TableRow key={index}>
+                                <StyledTableCell>{items.name}</StyledTableCell>
+                                <StyledTableCell>{items.description}</StyledTableCell>
+                                <StyledTableCell>{items.volume}{items.volumeUnit}</StyledTableCell>
+                                <StyledTableCell>{items.weight}{items.weightUnit}</StyledTableCell>
+                                <StyledTableCell>{items.height}</StyledTableCell>
+                                <StyledTableCell>{items.width}</StyledTableCell>
+                                <StyledTableCell>{items.depth}</StyledTableCell>
+                                <StyledTableCell>{items.lengthUnit}</StyledTableCell>
+                                <StyledTableCell>{items.category}</StyledTableCell>
+                                <StyledTableCell>${items.price}</StyledTableCell>
+                                <StyledTableCell>{quantityAvailable}</StyledTableCell>
+                                {/* <td>{items.user.email}</td> */}
+                                <StyledTableCell><a href="mailto: {items.user.email}"><Email />{items.user.email}</a></StyledTableCell>
+
+                            </TableRow>
                         </>
                     )
                 }
             })
         } else {
-            return <><tr><td colSpan={14}>No Items Available</td></tr></>
+            return <><TableRow><StyledTableCell colSpan={12}>No Items Available</StyledTableCell></TableRow></>
         }
     }
 
@@ -94,25 +146,25 @@ class ProductFeed extends React.Component<ProductProps, ProductState>{
         return (
             <div>
                 <h2>Products Available</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Item Description</th>
-                            <th>Volume</th>
-                            <th>Weight</th>
-                            <th>Height</th>
-                            <th>Width</th>
-                            <th>Depth</th>
-                            <th>Unit</th>
-                            <th>Category</th>
-                            <th>Price(each)</th>
-                            <th>Quantity Available</th>
-                            <th>Maker Contact</th>
-                        </tr>
-                    </thead>
-                    <tbody>{this.mapProducts()}</tbody>
-                </table>
+                <StyledTable className={classes.table}>
+                    <TableHead>
+                        <StyledTableRow className={classes.tableHead}>
+                            <StyledTableCell>Item Name</StyledTableCell>
+                            <StyledTableCell>Item Description</StyledTableCell>
+                            <StyledTableCell>Volume</StyledTableCell>
+                            <StyledTableCell>Weight</StyledTableCell>
+                            <StyledTableCell>Height</StyledTableCell>
+                            <StyledTableCell>Width</StyledTableCell>
+                            <StyledTableCell>Depth</StyledTableCell>
+                            <StyledTableCell>Unit</StyledTableCell>
+                            <StyledTableCell>Category</StyledTableCell>
+                            <StyledTableCell>Price<br/>(each)</StyledTableCell>
+                            <StyledTableCell>Quantity Available</StyledTableCell>
+                            <StyledTableCell>Maker Contact</StyledTableCell>
+                        </StyledTableRow>
+                    </TableHead>
+                    <TableBody>{this.mapProducts()}</TableBody>
+                </StyledTable>
             </div>
         )
     }

@@ -1,14 +1,8 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
 import React from 'react'
 import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
 import MakeUserAdmin from './MakeUserAdmin'
-import { Check, Clear, Delete } from '@material-ui/icons'
+import { Check, Clear } from '@material-ui/icons'
 import { Button } from '@material-ui/core'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
@@ -124,15 +118,8 @@ class EditUserInfo extends React.Component<EditUserInfoProps, EditUserInfoState>
             .then((response) => {
                 console.log('response', response);
                 this.setState({
-                    userToEdit: {
-                        id: response.user.id,
-                        firstName: response.user.firstName,
-                        lastName: response.user.lastName,
-                        email: response.user.email,
-                        password: response.user.password,
-                        admin: response.user.admin,
-                        role: response.user.role
-                    }
+                    userToEdit: response.user,
+                    newUserInfo: response.user
                 }, () => console.log('state', this.state))
             })
             .catch(err => console.log(err))
