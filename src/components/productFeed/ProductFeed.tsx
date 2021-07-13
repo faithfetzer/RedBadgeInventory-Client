@@ -21,7 +21,7 @@ const styles = () => createStyles({
     },
     tableHead:{
         color: '#30011E',
-        backgroundColor: '#FFB7FF',
+        // backgroundColor: '#FFB7FF',
         border: 'none'
     }
 })
