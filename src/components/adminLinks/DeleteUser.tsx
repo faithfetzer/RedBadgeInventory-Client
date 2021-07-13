@@ -1,13 +1,7 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { Button } from '@material-ui/core';
-import { Clear, Delete } from '@material-ui/icons'
+import { Delete } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
@@ -92,7 +86,7 @@ class DeleteUser extends React.Component<DeleteUserProps, DeleteUserState>{
                     <br />
                     <input type="email" id='email' name='email' value={this.state.emailEntered} onChange={this.handleChange}></input>
                     <br />
-                    <Button variant="contained" color="secondary" type="submit"><Delete />Delete Account</Button>
+                    <Button variant="contained" color="secondary" type="submit"><Delete/>Delete</Button>
                 </form>
             </div>
         )

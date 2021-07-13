@@ -1,17 +1,17 @@
 import {
-    BrowserRouter as Router,
-    Switch,
     Link,
-    Route
 } from 'react-router-dom';
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
 import EditLocation from './EditLocation'
 import DeleteLocation from './DeleteLocation'
-import { Button } from '@material-ui/core'
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
 import { Delete, Clear } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 
 interface ViewLocationProps extends WithStyles<typeof styles> {
@@ -32,7 +32,70 @@ type ViewLocationState = {
 }
 
 const styles = () => createStyles({
+    mainDiv: {
+        '& Button' :{
+            margin: '5px'
+        },
+        '& h2' :{
+            color: '#30011E'
+        }
+    },
+    table: {
+        border: '3px solid #0A2463',
+    },
+    tableHead:{
+        color: '#30011E',
+        backgroundColor: '#FFB7FF',
+        border: 'none'
+    },
+    modal: {
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalContent: {
+        backgroundColor: 'grey',
+        border: '2px solid #000',
+        borderRadius: 10,
+        padding: '10px',
+        '& Button' :{
+            margin: '5px'
+        }
+    },
 })
+
+const StyledTableRow = withStyles(() =>
+    createStyles({
+        root: {
+            height: 10,
+            textAlign: 'center',
+        },
+    }),
+)(TableRow);
+
+const StyledTable = withStyles(() =>
+    createStyles({
+        root: {
+            backgroundColor: '#CCD7C5',
+            height: 10,
+            width:'75px',
+            textAlign: 'center',
+        },
+    }),
+)(Table);
+
+const StyledTableCell = withStyles(() =>
+    createStyles({
+        root: {
+            textAlign: 'center',
+            padding: '0', 
+            margin: 0,
+            fontSize: 14,
+            // border: '2px solid #0A2463'
+        },
+    }),
+)(TableCell);
 
 class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>{
     constructor(props: ViewLocationProps) {
@@ -73,19 +136,19 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
             return this.state.myLocations.map((locations, index) => {
                 return (
                     <>
-                        <tr key={index}>
-                            <td>{locations.name}</td>
-                            <td>{locations.url}</td>
-                            <td>{locations.address}</td>
-                            <td>{locations.notes}</td>
-                            <td><Button variant="contained" onClick={() => { this.changeEditView(); this.setLocationToChange(locations.id) }}>Edit</Button></td>
-                            <td><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setLocationToChange(locations.id) }}><Delete />Delete</Button></td>
-                        </tr>
+                        <TableRow key={index}>
+                            <StyledTableCell>{locations.name}</StyledTableCell>
+                            <StyledTableCell>{locations.url}</StyledTableCell>
+                            <StyledTableCell>{locations.address}</StyledTableCell>
+                            <StyledTableCell>{locations.notes}</StyledTableCell>
+                            <StyledTableCell><Button variant="contained" onClick={() => { this.changeEditView(); this.setLocationToChange(locations.id) }}>Edit</Button></StyledTableCell>
+                            <StyledTableCell><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setLocationToChange(locations.id) }}><Delete />Delete</Button></StyledTableCell>
+                        </TableRow>
                     </>
                 )
             })
         } else {
-            return <><tr><td colSpan={4}>No Listing Locations Currently. <Link to='/addmylocations'>Add One!</Link></td></tr></>
+            return <><TableRow><StyledTableCell colSpan={4}>No Listing Locations Currently. <Link to='/addmylocations'>Add One!</Link></StyledTableCell></TableRow></>
         }
     }
 
@@ -107,58 +170,111 @@ class ViewLocation extends React.Component<ViewLocationProps, ViewLocationState>
         })
     }
 
-    editLocationView() {
-        return (
-            <div>
-                <Button variant="contained" onClick={this.changeEditView}><Clear />Cancel</Button>
-                <EditLocation sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
-            </div>
-        )
-    }
+    // editLocationView() {
+    //     return (
+    //         <div>
+    //             <Button variant="contained" onClick={this.changeEditView}><Clear /></Button>
+    //             <EditLocation fetchMyLocations={this.fetchMyLocations} sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
+    //         </div>
+    //     )
+    // }
 
-    deleteLocationView() {
-        return (
-            <div>
-                <Button variant="contained" onClick={this.changeDeleteView}><Clear />Cancel</Button>
-                <DeleteLocation currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
-            </div>
-        )
-    }
+    // deleteLocationView() {
+    //     return (
+    //         <div>
+    //             <Button variant="contained" onClick={this.changeDeleteView}><Clear /></Button>
+    //             <DeleteLocation fetchMyLocations={this.fetchMyLocations} currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
+    //         </div>
+    //     )
+    // }
 
-    viewController() {
-        if (this.state.editLocationView) {
-            return <>{this.editLocationView()}</>
-        } else if (this.state.deleteLocationView) {
-            return <>{this.deleteLocationView()}</>
-        } else {
-            return (
-                <>
-                    <Button variant="contained"><Link to='/addmylocations'>Add a Listing Location</Link></Button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Location Name</th>
-                                <th>URL</th>
-                                <th>Address</th>
-                                <th>Notes</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>{this.mapProducts()}</tbody>
-                    </table>
-                </>
-            )
-        }
-    }
+    // viewController() {
+    //     if (this.state.editLocationView) {
+    //         return <>{this.editLocationView()}</>
+    //     } else if (this.state.deleteLocationView) {
+    //         return <>{this.deleteLocationView()}</>
+    //     } else {
+    //         return (
+    //             <>                
+    //                 <h2>Listing Locations</h2>
+    //                 <Button variant="contained"><Link to='/addmylocations' style={{ textDecoration: 'none' }}>Add a Listing Location</Link></Button>
+    //                 <StyledTable>
+    //                     <TableHead>
+    //                         <StyledTableRow>
+    //                             <StyledTableCell>Location Name</StyledTableCell>
+    //                             <StyledTableCell>URL</StyledTableCell>
+    //                             <StyledTableCell>Address</StyledTableCell>
+    //                             <StyledTableCell>Notes</StyledTableCell>
+    //                             <StyledTableCell></StyledTableCell>
+    //                             <StyledTableCell></StyledTableCell>
+    //                         </StyledTableRow>
+    //                     </TableHead>
+    //                     <TableBody>{this.mapProducts()}</TableBody>
+    //                 </StyledTable>
+    //             </>
+    //         )
+    //     }
+    // }
 
     render() {
         const { classes } = this.props
 
         return (
-            <div>
-                <h2>Listing Locations</h2>
-                {this.viewController()}
+            <div className={classes.mainDiv}>
+                {/* {this.viewController()} */}
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={this.state.editLocationView}
+                    onClose={this.changeEditView}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}>
+                    <Fade in={this.state.editLocationView}>
+                        <div className={classes.modalContent}>
+                <Button variant="contained" onClick={this.changeEditView}><Clear /></Button>
+                <EditLocation fetchMyLocations={this.fetchMyLocations} sessionToken={this.props.sessionToken} changeEditView={this.changeEditView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
+                        </div>
+                    </Fade>
+                </Modal>
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={this.state.deleteLocationView}
+                    onClose={this.changeDeleteView}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}>
+                    <Fade in={this.state.deleteLocationView}>
+                        <div className={classes.modalContent}>
+                        <Button variant="contained" onClick={this.changeDeleteView}><Clear /></Button>
+                <DeleteLocation fetchMyLocations={this.fetchMyLocations} currentUserId={this.props.currentUserId} sessionToken={this.props.sessionToken} changeDeleteView={this.changeDeleteView} setLocationToChange={this.setLocationToChange} locationToChange={this.state.locationToChange} />
+                        </div>
+                    </Fade>
+                </Modal>
+                <>                
+                    <h2>Listing Locations</h2>
+                    <Button variant="contained"><Link to='/addmylocations' style={{ textDecoration: 'none' }}>Add a Listing Location</Link></Button>
+                    <StyledTable>
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell>Location Name</StyledTableCell>
+                                <StyledTableCell>URL</StyledTableCell>
+                                <StyledTableCell>Address</StyledTableCell>
+                                <StyledTableCell>Notes</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>{this.mapProducts()}</TableBody>
+                    </StyledTable>
+                </>
             </div>
         )
     }

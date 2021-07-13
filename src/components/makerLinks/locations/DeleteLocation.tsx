@@ -1,15 +1,8 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route,
-    useParams
-} from 'react-router-dom';
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
 import { Button } from '@material-ui/core'
-import { Delete, Clear } from '@material-ui/icons'
+import { Delete } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
@@ -24,6 +17,7 @@ interface DeleteLocationProps extends WithStyles<typeof styles> {
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
+    fetchMyLocations: () => void,
     changeDeleteView: () => void,
     setLocationToChange: (id: number | null) => void
 }
@@ -53,7 +47,7 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
 
     handleSubmit(e: any) {
         e.preventDefault()
-        console.log('submit', this.state.location)
+        console.log('delete', this.state.location)
         let url = `${APIURL}/locations/delete/${this.props.locationToChange}`
 
         console.log(url, this.props.sessionToken)
@@ -67,6 +61,7 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
             .then((response) => response.json())
             .then((response) => {
                 this.props.setLocationToChange(null)
+                this.props.fetchMyLocations()
                 this.props.changeDeleteView()
                 // this.success()
                 console.log(response)
@@ -115,7 +110,6 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
 
         return (
             <div>
-                <Button variant="contained" onClick={this.props.changeDeleteView}><Clear/></Button>
                 <h2>Delete Location</h2>
                 <p>{this.state.location.name}</p>
                 <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete Location</Button>

@@ -1,9 +1,3 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
 import React from 'react'
 import { Button } from '@material-ui/core'
 import { ExitToApp } from '@material-ui/icons'

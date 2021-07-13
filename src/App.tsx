@@ -4,6 +4,7 @@ import Footer from './site/Footer';
 import Header from './site/Header';
 import Auth from './components/auth/Auth';
 import Sidebar from './site/Sidebar'
+import Welcome from './components/Welcome';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 type AppState = {
@@ -18,9 +19,9 @@ const styles = () => createStyles({
     minHeight: '100vh',
     backgroundColor: '#86BBD8',
     color: '#011627',
-    // '& Button' :{
-    //   backgroundColor: '#CCD7C5',
-    // },
+    '& Button' :{
+      margin: '5px'
+  }
   }
 });
 
@@ -101,6 +102,7 @@ class App extends React.Component<Props, AppState>{
 
   componentDidUpdate() {
     console.log('updated state', this.state)
+    // this.checkLocalStorage()
   }
 
   protectedView() {
@@ -108,7 +110,7 @@ class App extends React.Component<Props, AppState>{
       <><Header sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId} />
         <Sidebar sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} currentUserId={this.state.currentUserId} />
         {/* <Display sessionToken={this.state.sessionToken} updateSessionToken={this.updateSessionToken} clearLocalStorage={this.clearLocalStorage} userRole={this.state.userRole} adminStatus={this.state.adminStatus} updateUserInfo={this.updateUserInfo} productFeedView={this.state.productFeedView} myItemView={this.state.myItemView} notProductView={this.notProductView} myLocationView={this.state.myLocationView} myAccountView={this.state.myAccountView} adminAccountManager={this.state.adminAccountManager} updateMyLocationView={this.updateMyLocationView} updateMyItemView={this.updateMyItemView} updateMyAccountView={this.updateMyAccountView} updateAdminAccount={this.updateAdminAccount} productView={this.productView} notMyAccountView={this.notMyAccountView} notAdminAccount={this.notAdminAccount} notMyItemView={this.notMyItemView} notMyLocationView={this.notMyLocationView}/>*/}</>
-      : <><Auth sessionToken={this.state.sessionToken} userRole={this.state.userRole} currentUserId={this.state.currentUserId} adminStatus={this.state.adminStatus} updateSessionToken={this.updateSessionToken} updateLocalStorage={this.updateLocalStorage} clearLocalStorage={this.clearLocalStorage} updateUserInfo={this.updateUserInfo} /></>
+      : <><Auth sessionToken={this.state.sessionToken} userRole={this.state.userRole} currentUserId={this.state.currentUserId} adminStatus={this.state.adminStatus} updateSessionToken={this.updateSessionToken} updateLocalStorage={this.updateLocalStorage} clearLocalStorage={this.clearLocalStorage} updateUserInfo={this.updateUserInfo} /><br/><Welcome/></>
   }
 
   render() {
@@ -117,8 +119,8 @@ class App extends React.Component<Props, AppState>{
       <div className="App">
         <div className={classes.mainDiv}>
           {this.protectedView()}
+          </div>
           <Footer />
-        </div>
       </div>
     );
   }

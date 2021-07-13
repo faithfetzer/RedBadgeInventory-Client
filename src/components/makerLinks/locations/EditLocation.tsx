@@ -1,10 +1,3 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route,
-    useParams
-} from 'react-router-dom';
 import React from 'react'
 import { LocationInfo } from '../../../Interfaces';
 import APIURL from '../../../helpers/environment'
@@ -22,6 +15,7 @@ interface EditLocationProps extends WithStyles<typeof styles> {
     // updateSessionToken: (newToken: string) => void,
     // clearLocalStorage: () => void,
     // updateUserInfo: (role: string, admin:boolean) => void,
+    fetchMyLocations: () => void,
     changeEditView: () => void,
     setLocationToChange: (id: number | null) => void
 }
@@ -82,6 +76,7 @@ class EditLocation extends React.Component<EditLocationProps, EditLocationState>
             .then((response) => response.json())
             .then((response) => {
                 this.props.setLocationToChange(null)
+                this.props.fetchMyLocations()
                 this.props.changeEditView()
                 // this.success()
                 console.log(response)
@@ -121,6 +116,7 @@ class EditLocation extends React.Component<EditLocationProps, EditLocationState>
                             console.log('yes', response.myLocations[i])
                             this.setState({
                                 location: response.myLocations[i],
+                                newLocation: response.myLocations[i]
                             }, () => console.log(this.state.location))
                         }
                         else {

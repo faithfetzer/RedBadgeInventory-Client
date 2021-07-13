@@ -1,46 +1,68 @@
+<h1 align="center">Welcome to Inventory Manager- Final Project Eleven Fifty Web Development Client 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://twitter.com/mcfetzercodes" target="_blank">
+    <img alt="Twitter: mcfetzercodes" src="https://img.shields.io/twitter/follow/mcfetzercodes.svg?style=social" />
+  </a>
+</p>
+
+> 
+This is my final project for Eleven Fifty Web Development Program.
+
+The project required creating a Node server and a React application, showing understanding of: 
+-PostgreSql
+-Express
+-Node
+-REST API’s
+-Creating API endpoints
+-React Basics
+-Connecting server and client
+
+TypeScript was implemented and Material UI was used for styling. 
+
+The server repo can  be accessed at https://github.com/faithfetzer/RedBadgeInventory-Server
+
+I created this to track my personal inventory of pottery that I make in my free time, and allow me to keep track of listings I have, whether on online marketplaces or in local store. 
+
+This inventory manager was made for makers and artists to keep track of the items they have for sale and where they may have them listed, such as various online marketplaces, in local stores etc.
+It also has a feature for buyers (primarily wholesale) to view what items are available for sale from all makers.
+Feel free to create an account! If you are a buyer, you can always switch to maker later if you start creating your own product!
+
+Admin users can manage other accounts (edit and delete), and allow other users access to admin level. If you are cloning the repo, you will need to set up an initial admin account in Postman. 
+
+### 🏠 [Deployed](https://inventorymanager-fef.herokuapp.com/)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Install
+npm install
 
-In the project directory, you can run:
+## Usage
 
-### `npm start`
+npm run start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Run tests
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+npm run test
 
-### `npm test`
+## Build
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+npm run build
 
-### `npm run build`
+## Author
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+👤 **Faith Fetzer**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Website: https://faithfetzer.github.io/
+* Twitter: [@mcfetzercodes](https://twitter.com/mcfetzercodes)
+* Github: [@faithfetzer](https://github.com/faithfetzer)
+* LinkedIn: [@faith-fetzer](https://linkedin.com/in/faith-fetzer)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Show your support
 
-### `npm run eject`
+Give a ⭐️ if this project helped you!
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

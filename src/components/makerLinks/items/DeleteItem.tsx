@@ -1,15 +1,8 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route,
-    useParams
-} from 'react-router-dom';
 import React from 'react'
 import { ItemInfo } from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
 import { Button } from '@material-ui/core'
-import { Delete, Clear } from '@material-ui/icons'
+import { Delete } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
@@ -111,7 +104,7 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
 
     handleSubmit(e: any) {
         e.preventDefault()
-        console.log('submit', this.state.item)
+        console.log('delete', this.state.item)
         let url = `${APIURL}/items/delete/${this.props.itemToChange}`
 
         console.log(url, this.props.sessionToken)
@@ -125,6 +118,7 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
             .then((response) => response.json())
             .then((response) => {
                 this.props.setItemToChange(null)
+                this.props.fetchItems()
                 this.props.changeDeleteView()
                 // this.success()
                 console.log(response)
@@ -140,7 +134,6 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
 
         return (
             <div>
-                <Button variant="contained" onClick={this.props.changeDeleteView}><Clear/></Button>
                 <h2>Delete Item</h2>
                 <p>{this.state.item.name}</p>
                 <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete Location</Button>
