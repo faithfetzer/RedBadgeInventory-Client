@@ -1,13 +1,13 @@
 import {
-    BrowserRouter as Router,
-    Switch,
     Link,
-    Route
 } from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { UserInfo } from '../../Interfaces';
 import { Button } from '@material-ui/core'
+import { Clear } from '@material-ui/icons'
+
+
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
@@ -154,7 +154,7 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
         return (
             <div>
                 <h2>Edit Your Account</h2>
-                <Link to='/viewmyaccount'>Cancel</Link>
+                <Link to='/viewmyaccount'><Clear/></Link>
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor='firstName'>First Name</label>
                     <br />
@@ -172,7 +172,7 @@ class EditAccount extends React.Component<EditAccountProps, EditAccountState>{
                     <br />
                     ({this.state.user.role})
                     <br />
-                    <fieldset id='role'>
+                    <fieldset id='role' placeholder={this.state.user.role}>
                         <label htmlFor='maker'>Maker</label>
                         <input type="radio" name='role' id='maker' value='maker' onChange={this.handleChange} />
                         <label htmlFor='buyer'>Buyer</label>

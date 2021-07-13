@@ -1,15 +1,7 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route,
-    useParams
-} from 'react-router-dom';
 import React from 'react'
 import { ItemInfo } from '../../../Interfaces'
 import APIURL from '../../../helpers/environment'
 import { Button } from '@material-ui/core'
-import { Clear } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 
@@ -192,6 +184,7 @@ class EditItem extends React.Component<EditItemProps, EditItemState>{
             .then((response) => {
                 this.props.setItemToChange(null)
                 this.props.changeEditView()
+                this.props.fetchItems()
                 console.log(response)
             })
             .catch(err => {

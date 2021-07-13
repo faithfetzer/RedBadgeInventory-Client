@@ -1,15 +1,12 @@
 import {
-    BrowserRouter as Router,
-    Switch,
     Link,
-    Route
 } from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../../helpers/environment'
 import { ItemInfo } from '../../../Interfaces'
 import EditItem from '../items/EditItem'
 import DeleteItem from '../items/DeleteItem'
-import { Button } from '@material-ui/core'
+import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
 import { Delete, Clear } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
@@ -32,7 +29,55 @@ type ViewItemState = {
 }
 
 const styles = () => createStyles({
+    mainDiv: {
+        '& Button' :{
+            margin: '5px'
+        },
+        '& h2' :{
+            color: '#30011E'
+        }
+    },
+    table: {
+        border: '3px solid #0A2463',
+    },
+    tableHead:{
+        color: '#30011E',
+        backgroundColor: '#FFB7FF',
+        border: 'none'
+    }
 })
+
+const StyledTableRow = withStyles(() =>
+    createStyles({
+        root: {
+            height: 10,
+            textAlign: 'center',
+        },
+    }),
+)(TableRow);
+
+const StyledTable = withStyles(() =>
+    createStyles({
+        root: {
+            backgroundColor: '#CCD7C5',
+            height: 10,
+            width:'75px',
+            textAlign: 'center',
+        },
+    }),
+)(Table);
+
+const StyledTableCell = withStyles(() =>
+    createStyles({
+        root: {
+            textAlign: 'center',
+            padding: '0', 
+            margin: 0,
+            fontSize: 14,
+            // border: '2px solid #0A2463'
+        },
+    }),
+)(TableCell);
 
 class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
     constructor(props: ViewItemProps) {
@@ -78,29 +123,29 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
                 let quantityAvailable = items.totalQuantity - items.quantitySold
                 return (
                     <>
-                        <tr key={index}>
-                            <td>{items.name}</td>
-                            <td>{items.description}</td>
-                            <td>{items.volume}{items.volumeUnit}</td>
-                            <td>{items.weight}{items.weightUnit}</td>
-                            <td>{items.height}</td>
-                            <td>{items.width}</td>
-                            <td>{items.depth}</td>
-                            <td>{items.lengthUnit}</td>
-                            <td>{items.category}</td>
-                            <td>${items.price}</td>
-                            <td>{quantityAvailable}</td>
-                            <td>{items.quantityListed}</td>
-                            <td>{items.quantitySold}</td>
-                            <td><Button variant="contained" onClick={() => { this.changeEditView(); this.setItemToChange(items.id) }}>Edit</Button></td>
-                            <td><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setItemToChange(items.id) }}><Delete /></Button></td>
-                        </tr>
+                        <TableRow key={index}>
+                            <StyledTableCell>{items.name}</StyledTableCell>
+                            <StyledTableCell>{items.description}</StyledTableCell>
+                            <StyledTableCell>{items.volume}{items.volumeUnit}</StyledTableCell>
+                            <StyledTableCell>{items.weight}{items.weightUnit}</StyledTableCell>
+                            <StyledTableCell>{items.height}</StyledTableCell>
+                            <StyledTableCell>{items.width}</StyledTableCell>
+                            <StyledTableCell>{items.depth}</StyledTableCell>
+                            <StyledTableCell>{items.lengthUnit}</StyledTableCell>
+                            <StyledTableCell>{items.category}</StyledTableCell>
+                            <StyledTableCell>${items.price}</StyledTableCell>
+                            <StyledTableCell>{quantityAvailable}</StyledTableCell>
+                            <StyledTableCell>{items.quantityListed}</StyledTableCell>
+                            <StyledTableCell>{items.quantitySold}</StyledTableCell>
+                            <StyledTableCell><Button variant="contained" onClick={() => { this.changeEditView(); this.setItemToChange(items.id) }}>Edit</Button></StyledTableCell>
+                            <StyledTableCell><Button variant="contained" color="secondary" onClick={() => { this.changeDeleteView(); this.setItemToChange(items.id) }}><Delete /></Button></StyledTableCell>
+                        </TableRow>
 
                     </>
                 )
             })
         } else {
-            return <><tr><td colSpan={15}>No Items Currently In Inventory. <Link to='/addmyitems'>Add Something!</Link></td></tr></>
+            return <><TableRow><StyledTableCell colSpan={15}>No Items Currently In Inventory. <Link to='/addmyitems' style={{ textDecoration: 'none' }}>Add Something!</Link></StyledTableCell></TableRow></>
         }
     }
 
@@ -147,30 +192,31 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
             return <>{this.deleteItemView()}</>
         } else {
             return (
-                <>
-                    <Button variant="contained"><Link to='/addmyitems'>Add Items</Link></Button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Volume</th>
-                                <th>Weight</th>
-                                <th>Height</th>
-                                <th>Width</th>
-                                <th>Depth</th>
-                                <th>Unit</th>
-                                <th>Category</th>
-                                <th>Price(each)</th>
-                                <th># Available</th>
-                                <th># Listed</th>
-                                <th># Sold</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>{this.mapProducts()}</tbody>
-                    </table>
+                <>            
+                <h2>My Inventory</h2>
+                    <Button variant="contained"><Link to='/addmyitems' style={{ textDecoration: 'none' }}>Add Items</Link></Button>
+                    <StyledTable>
+                        <TableHead>
+                            <StyledTableRow>
+                                <StyledTableCell>Name</StyledTableCell>
+                                <StyledTableCell>Description</StyledTableCell>
+                                <StyledTableCell>Volume</StyledTableCell>
+                                <StyledTableCell>Weight</StyledTableCell>
+                                <StyledTableCell>Height</StyledTableCell>
+                                <StyledTableCell>Width</StyledTableCell>
+                                <StyledTableCell>Depth</StyledTableCell>
+                                <StyledTableCell>Unit</StyledTableCell>
+                                <StyledTableCell>Category</StyledTableCell>
+                                <StyledTableCell>Price(each)</StyledTableCell>
+                                <StyledTableCell># Available</StyledTableCell>
+                                <StyledTableCell># Listed</StyledTableCell>
+                                <StyledTableCell># Sold</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                            </StyledTableRow>
+                        </TableHead>
+                        <TableBody>{this.mapProducts()}</TableBody>
+                    </StyledTable>
                 </>
 
             )
@@ -182,8 +228,7 @@ class ViewItem extends React.Component<ViewItemProps, ViewItemState>{
         const { classes } = this.props
 
         return (
-            <div>
-                <h2>My Inventory</h2>
+            <div className={classes.mainDiv}>
                 {this.viewController()}
             </div>
 

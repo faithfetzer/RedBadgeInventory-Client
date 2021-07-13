@@ -1,16 +1,15 @@
 import {
-    BrowserRouter as Router,
-    Switch,
     Link,
-    Route
 } from 'react-router-dom';
 import React from 'react'
 import { Check, Clear, Delete } from '@material-ui/icons'
 import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
-import { Button, ButtonGroup } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
-
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 interface ViewAccountProps extends WithStyles<typeof styles> {
     sessionToken: string,
@@ -26,6 +25,17 @@ type ViewUserInfoState = {
     userInfo: UserInfo,
 }
 const styles = () => createStyles({
+    modal: {
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalContent: {
+        backgroundColor: 'grey',
+        border: '2px solid #000',
+        borderRadius: 10,
+    },
 })
 
 class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
@@ -92,11 +102,8 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
                 <p>Email: {this.state.userInfo.email}</p>
                 <p>Role: {this.state.userInfo.role}</p>
                 <p>Admin: {this.admin()}</p>
-                <ButtonGroup>
-                    <Button variant="contained" size="small"><Link to='/editmyaccount'>Edit</Link></Button>
-                    <br />
-                    <Button variant="contained" size="small" color="secondary"><Link to='/deletemyaccount'><Delete />Delete</Link></Button>
-                </ButtonGroup>
+                    <Button variant="contained" size="small"><Link to='/editmyaccount' style={{ textDecoration: 'none' }}>Edit</Link></Button>
+                    <Button variant="contained" size="small" color="secondary"><Link to='/deletemyaccount' style={{ textDecoration: 'none' }}><Delete/>Delete</Link></Button>
             </>
             : <></>
     }

@@ -1,10 +1,3 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Link,
-    Route
-} from 'react-router-dom';
-import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
 import { Button } from '@material-ui/core';
 import { Check, Clear, Delete } from '@material-ui/icons'
 import React from 'react'
@@ -12,8 +5,10 @@ import { UserInfo } from '../../Interfaces';
 import APIURL from '../../helpers/environment'
 import EditUserInfo from './EditUserInfo'
 import DeleteUser from './DeleteUser'
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
-
+import { createStyles, WithStyles, withStyles} from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 interface ViewUserInfoProps extends WithStyles<typeof styles> {
     sessionToken: string,
@@ -35,16 +30,34 @@ type ViewUserInfoState = {
 const styles = () => createStyles({
     sidebarListStyling: {
         minHeight: '100vh',
-        // backgroundColor: '#CCD7C5',
-        // color: '#011627',
-        // '& Link' :{
-        //     textDecoration: 'none',
-        //     color: 'red'
-        //   backgroundColor: '#CCD7C5',
+        
     },
-    linkStyling: {
-        textDecoration: 'none',
-    }
+    mainDiv: {
+        '& h2' :{
+            color: '#30011E'
+        }
+    },
+    searchInfo: {
+        
+    },
+    modal: {
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalContent: {
+        backgroundColor: 'grey',
+        border: '2px solid #000',
+        borderRadius: 10,
+        padding: '10px',
+        '& Button' :{
+            margin: '5px'
+        },
+        '& fieldset' :{
+            border: "none"
+        }, 
+    },
 
 });
 
@@ -143,7 +156,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
                 <p>Role: {this.state.userInfo.role}</p>
                 <p>Admin: {this.admin()}</p>
                 <Button variant="contained" type="button" onClick={this.toggleEdit}>Edit Account</Button>
-                <Button variant="contained" color="secondary" type="button" onClick={this.toggleDelete}><Delete />Delete Account</Button>
+                <Button variant="contained" color="secondary" type="button" onClick={this.toggleDelete}><Delete />Delete</Button>
             </>
     }
 
@@ -153,6 +166,7 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
             openEdit: !this.state.openEdit
         })
     }
+
     toggleDelete() {
         console.log('open delete')
         this.setState({
@@ -164,35 +178,68 @@ class ViewUserInfo extends React.Component<ViewUserInfoProps, ViewUserInfoState>
         const { classes } = this.props
 
         return (
-            <div>
-                <Modal isOpen={this.state.openEdit}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description" className='modal-dialog-centered'>
-                    <ModalHeader>
-                        <Button variant="contained" onClick={this.toggleEdit}><Clear /></Button></ModalHeader>
-                    <ModalBody>
-                        <EditUserInfo sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody>
+            <div className={classes.mainDiv}>
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={this.state.openEdit}
+                    onClose={this.toggleEdit}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}>
+                    <Fade in={this.state.openEdit}>
+                        <div className={classes.modalContent}>
+                        <Button variant="contained" onClick={this.toggleEdit}><Clear /></Button>
+                        <EditUserInfo sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} />
+                        </div>
+                    </Fade>
                 </Modal>
-                <Modal isOpen={this.state.openDelete}
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={this.state.openDelete}
+                    onClose={this.toggleDelete}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}>
+                    <Fade in={this.state.openDelete}>
+                        <div className={classes.modalContent}>
+                        <Button variant="contained" onClick={this.toggleDelete}><Clear /></Button>
+                        <DeleteUser sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} />
+                        </div>
+                    </Fade>
+                </Modal>
+
+                {/* <Modal isOpen={this.state.openDelete}
                     aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description" className='modal-dialog-centered'>
+                    aria-describedby="simple-modal-description" className={classes.modal}>
                     <ModalHeader>
                         <Button variant="contained" onClick={this.toggleDelete}><Clear /></Button></ModalHeader>
                     <ModalBody>
-                        <DeleteUser sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody></Modal>
-                <h3>Search for User Info By Email</h3>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor='email'>Email</label>
-                    <br />
-                    <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
-                    <br />
-                    <Button variant="contained" type='submit'>Search</Button>
-                </form>
-                {this.userInfoDisplay()}
-
+                        <DeleteUser sessionToken={this.props.sessionToken} userEmail={this.state.userInfo.email} userID={this.state.userInfo.id} /></ModalBody>
+                </Modal> */}
+                <div className={classes.searchInfo}>
+                    <h2>Search for User Info By Email</h2>
+                    <form onSubmit={this.handleSubmit}>
+                        <label htmlFor='email'>Email</label>
+                        <br />
+                        <input type="email" id='email' name='email' value={this.state.email} onChange={this.handleChange}></input>
+                        <br />
+                        <Button variant="contained" type='submit'>Search</Button>
+                    </form>
+                    {this.userInfoDisplay()}
+                </div>
             </div >
         )
     }
 };
 
 export default withStyles(styles)(ViewUserInfo)
+
+// 'modal-dialog-centered'

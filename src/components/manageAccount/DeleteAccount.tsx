@@ -1,13 +1,10 @@
 import {
-    BrowserRouter as Router,
-    Switch,
     Link,
-    Route
 } from 'react-router-dom';
 import React from 'react'
 import APIURL from '../../helpers/environment'
 import { Button } from '@material-ui/core'
-import { Delete } from '@material-ui/icons'
+import { Delete, Clear } from '@material-ui/icons'
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles'
 
 interface DeleteAccountProps extends WithStyles<typeof styles> {
@@ -83,7 +80,7 @@ class DeleteAccount extends React.Component<DeleteAccountProps, DeleteAccountSta
         return (
             <div>
                 <h2>Delete Your Account</h2>
-                <Link to='/viewmyaccount'>Cancel</Link>
+                <Link to='/viewmyaccount'><Clear/></Link>
                 <br />
                 <strong>THIS IS PERMANENT AND CANNOT BE UNDONE</strong>
                 <form onSubmit={this.handleDelete}>
