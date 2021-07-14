@@ -118,7 +118,7 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
             .then((response) => response.json())
             .then((response) => {
                 this.props.setItemToChange(null)
-                this.props.fetchItems()
+                // this.props.fetchItems()
                 this.props.changeDeleteView()
                 // this.success()
                 console.log(response)
@@ -135,8 +135,20 @@ class DeleteItem extends React.Component<DeleteItemProps, DeleteItemState>{
         return (
             <div>
                 <h2>Delete Item</h2>
-                <p>{this.state.item.name}</p>
-                <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete Location</Button>
+                <p>Name: {this.state.item.name}</p>
+                <p>Description: {this.state.item.description}</p>
+                <p>Volume: {this.state.item.volume}{this.state.item.volumeUnit}</p>
+                <p>Weight: {this.state.item.weight}{this.state.item.weightUnit}</p>
+                <p>Height: {this.state.item.height}</p>
+                <p>Width: {this.state.item.width}</p>
+                <p>Depth: {this.state.item.depth}</p>
+                <p>Unit: {this.state.item.lengthUnit}</p>
+                <p>Category: {this.state.item.category}</p>
+                <p>Price(each): ${this.state.item.price}</p>
+                <p>Total Quantity: {this.state.item.totalQuantity}</p>
+                <p>Quantity Listed: {this.state.item.quantityListed}</p>
+                <p>Quantity Sold: {this.state.item.quantitySold}</p>
+                <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete</Button>
             </div>
         )
     }
