@@ -60,8 +60,8 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
         })
             .then((response) => response.json())
             .then((response) => {
-                this.props.setLocationToChange(null)
-                this.props.fetchMyLocations()
+                // this.props.setLocationToChange(null)
+                // this.props.fetchMyLocations()
                 this.props.changeDeleteView()
                 // this.success()
                 console.log(response)
@@ -111,8 +111,11 @@ class DeleteLocation extends React.Component<DeleteLocationProps, DeleteLocation
         return (
             <div>
                 <h2>Delete Location</h2>
-                <p>{this.state.location.name}</p>
-                <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete Location</Button>
+                <p>Name: {this.state.location.name}</p>
+                <p>URL: {this.state.location.url}</p>
+                <p>Address: {this.state.location.address}</p>
+                <p>Notes: {this.state.location.notes}</p>
+                <Button variant="contained" onClick={this.handleSubmit}><Delete/>Delete</Button>
             </div>
         )
     }
