@@ -22,7 +22,14 @@ type AddItemState = {
     item: ItemInfo
 }
 
-const styles = () => createStyles({})
+const styles = () => createStyles({
+    mainDiv: {
+        fontSize: 12,
+        '& label':{
+            fontWeight: 'bold'
+        }
+    }
+})
 
 class AddItem extends React.Component<AddItemProps, AddItemState>{
     constructor(props: AddItemProps) {
@@ -112,6 +119,39 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
             .then(response => response.json())
             .then((response) => {
                 console.log('response', response);
+                this.setState({
+                        item: {
+                            id: 0,
+                            name: "",
+                            description: "",
+                            volume: undefined,
+                            volumeUnit: "",
+                            weight: undefined,
+                            weightUnit: "",
+                            height: undefined,
+                            width: undefined,
+                            depth: undefined,
+                            lengthUnit: "",
+                            category: "",
+                            available: false,
+                            price: undefined,
+                            location: "",
+                            totalQuantity: 0,
+                            quantityListed: undefined,
+                            quantitySold: 0,
+                            userId: this.props.currentUserId,
+                            locationId: null,
+                            user: {
+                                id: undefined,
+                                firstName: "",
+                                lastName: "",
+                                email: "",
+                                password: "",
+                                admin: null,
+                                role: ""
+                            }
+                    }
+                })
             })
             .catch(err => console.log(err))
     }
@@ -120,7 +160,7 @@ class AddItem extends React.Component<AddItemProps, AddItemState>{
         const { classes } = this.props
 
         return (
-            <div>
+            <div className={classes.mainDiv}>
                 <h2>Add Item</h2>
                 <form>
                     <label htmlFor='name'>Item Name</label>

@@ -102,7 +102,7 @@ class ViewAccount extends React.Component<ViewAccountProps, ViewUserInfoState>{
                 <p>Email: {this.state.userInfo.email}</p>
                 <p>Role: {this.state.userInfo.role}</p>
                 <p>Admin: {this.admin()}</p>
-                    <Button variant="contained" size="small"><Link to='/editmyaccount' style={{ textDecoration: 'none' }}>Edit</Link></Button>
+                    <Button variant="contained"><Link to='/editmyaccount' style={{ textDecoration: 'none' }}>Edit</Link></Button>
                     <Button variant="contained" size="small" color="secondary"><Link to='/deletemyaccount' style={{ textDecoration: 'none' }}><Delete/>Delete</Link></Button>
             </>
             : <></>

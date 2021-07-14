@@ -75,8 +75,8 @@ class EditLocation extends React.Component<EditLocationProps, EditLocationState>
         })
             .then((response) => response.json())
             .then((response) => {
-                this.props.setLocationToChange(null)
-                this.props.fetchMyLocations()
+                // this.props.setLocationToChange(null)
+                // this.props.fetchMyLocations()
                 this.props.changeEditView()
                 // this.success()
                 console.log(response)
